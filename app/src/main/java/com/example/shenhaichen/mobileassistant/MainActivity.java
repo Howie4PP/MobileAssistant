@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.shenhaichen.mobileassistant.adapter.ViewPagerAdapter;
@@ -48,20 +49,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void initTabLayout(){
         PagerAdapter mPageAdapter = new ViewPagerAdapter(getSupportFragmentManager(),this);
         mViewPager.setAdapter(mPageAdapter);
+
+        LinearLayout mLinearLayout = (LinearLayout) mTabLayout.getChildAt(0);
+        //在所有tab的中间显示分割线
+        mLinearLayout.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
+        //设置分割线的距离，LinearLayout的内距离
+        mLinearLayout.setDividerPadding(20);
+        //设置分割线的样式
+        mLinearLayout.setDividerDrawable(getDrawable(R.drawable.divider_vertical));
+        //设置分割颜色
+        mLinearLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         mTabLayout.setupWithViewPager(mViewPager);
     }
 
     private void initToolbar(){
         headerView = mNavigationView.getHeaderView(0);
         headerView.setOnClickListener(this);
-        //the menu which inside the navigation view to use this listener
+        //设置navigation view的监听
         mNavigationView.setNavigationItemSelectedListener(this);
-        //set menu of toolbar
+        //设置toolbar的menu
         mToolbar.inflateMenu(R.menu.menu_toolbar);
-        //combine the toolbar and drawerLayout
+        //联合toolbar 和 drawerLayout
         ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this,
                 mDrawerLayout,mToolbar,R.string.open,R.string.close);
-        //sync the toolbar and drawerLayout
+        //同步两个控件
         mDrawerToggle.syncState();
         mDrawerLayout.addDrawerListener(mDrawerToggle);
     }
