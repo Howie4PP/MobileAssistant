@@ -3,6 +3,9 @@ package com.example.shenhaichen.mobileassistant;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import com.example.shenhaichen.mobileassistant.adapter.ViewPagerAdapter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,6 +27,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     NavigationView mNavigationView;
     @BindView(R.id.main_tool_bar)
     Toolbar mToolbar;
+    @BindView(R.id.main_tab_layout)
+    TabLayout mTabLayout;
+    @BindView(R.id.main_view_pager)
+    ViewPager mViewPager;
+
 
     private View headerView;
     @Override
@@ -30,6 +40,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        initTabLayout();
+        initToolbar();
+
+    }
+
+    private void initTabLayout(){
+        PagerAdapter mPageAdapter = new ViewPagerAdapter(getSupportFragmentManager(),this);
+        mViewPager.setAdapter(mPageAdapter);
+        mTabLayout.setupWithViewPager(mViewPager);
+    }
+
+    private void initToolbar(){
         headerView = mNavigationView.getHeaderView(0);
         headerView.setOnClickListener(this);
         //the menu which inside the navigation view to use this listener
