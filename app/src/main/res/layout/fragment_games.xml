@@ -4,10 +4,10 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="游戏"
-        />
+        android:text="ffff"
+        android:textColor="@android:color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="56dp"
+        android:textSize="16sp"/>
 
 </LinearLayout>

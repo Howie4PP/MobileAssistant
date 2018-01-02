@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private View headerView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
@@ -57,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mLinearLayout.setDividerPadding(20);
         //设置分割线的样式
         mLinearLayout.setDividerDrawable(getDrawable(R.drawable.divider_vertical));
-        //设置分割颜色
+        //设置分割颜色（颜色尽量和tab一样）
         mLinearLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         mTabLayout.setupWithViewPager(mViewPager);
     }
