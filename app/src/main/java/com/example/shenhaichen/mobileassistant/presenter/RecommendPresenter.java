@@ -5,6 +5,8 @@ import com.example.shenhaichen.mobileassistant.bean.PageBean;
 import com.example.shenhaichen.mobileassistant.data.RecommendModel;
 import com.example.shenhaichen.mobileassistant.presenter.contract.RecommendContract;
 
+import javax.inject.Inject;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -19,9 +21,10 @@ public class RecommendPresenter implements RecommendContract.Presenter {
     private RecommendContract.View mView;
     private RecommendModel mModel;
 
-    public RecommendPresenter(RecommendContract.View mView) {
+    @Inject
+    public RecommendPresenter(RecommendContract.View mView, RecommendModel mModel) {
         this.mView = mView;
-        mModel = new RecommendModel();
+        this.mModel = mModel;
     }
 
     @Override

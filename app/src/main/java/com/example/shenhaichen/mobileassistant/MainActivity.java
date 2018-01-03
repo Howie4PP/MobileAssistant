@@ -15,7 +15,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.example.shenhaichen.mobileassistant.adapter.ViewPagerAdapter;
+import com.example.shenhaichen.mobileassistant.ui.adapter.ViewPagerAdapter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

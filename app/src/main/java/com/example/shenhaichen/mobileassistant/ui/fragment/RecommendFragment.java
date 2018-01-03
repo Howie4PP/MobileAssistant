@@ -10,16 +10,21 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.shenhaichen.mobileassistant.MyApplication;
 import com.example.shenhaichen.mobileassistant.R;
-import com.example.shenhaichen.mobileassistant.adapter.RecommendAdapter;
 import com.example.shenhaichen.mobileassistant.bean.AppInfo;
+import com.example.shenhaichen.mobileassistant.dagger.component.AppComponent;
+import com.example.shenhaichen.mobileassistant.dagger.component.DaggerRecommendComponent;
+import com.example.shenhaichen.mobileassistant.dagger.module.RecommendModule;
 import com.example.shenhaichen.mobileassistant.presenter.RecommendPresenter;
 import com.example.shenhaichen.mobileassistant.presenter.contract.RecommendContract;
+import com.example.shenhaichen.mobileassistant.ui.adapter.RecommendAdapter;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,19 +37,34 @@ public class RecommendFragment extends Fragment implements RecommendContract.Vie
 
     @BindView(R.id.recommend_recycle_view)
     RecyclerView mRecyclerView;
+
     private RecommendAdapter mRecommendAdapter;
-    private RecommendPresenter mPresenter;
-    @BindView(R.id.recommend_progressbar)
-    ProgressBar mProgressBar;
+    @Inject
+    RecommendPresenter mPresenter;
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recomend,container,false);
         ButterKnife.bind(this, view);
-        mPresenter = new RecommendPresenter(this);
+
+        //得到appComponent
+        AppComponent daggerAppComponent = ((MyApplication)getActivity().getApplication()).getmAppComponent();
+
+        //dagger注入
+        DaggerRecommendComponent.builder()
+                .appComponent(daggerAppComponent)
+                .recommendModule(new RecommendModule(this))
+                .build().inject(this);
         initData();
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
     }
 
     private void initData(){
@@ -61,12 +81,12 @@ public class RecommendFragment extends Fragment implements RecommendContract.Vie
 
     @Override
     public void showLoading() {
-        mProgressBar.setVisibility(View.VISIBLE);
+//        mProgressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void dismissLoading() {
-        mProgressBar.setVisibility(View.GONE);
+//        mProgressBar.setVisibility(View.GONE);
     }
 
     @Override

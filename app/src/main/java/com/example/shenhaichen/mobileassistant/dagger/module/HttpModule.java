@@ -1,7 +1,13 @@
-package com.example.shenhaichen.mobileassistant.network;
+package com.example.shenhaichen.mobileassistant.dagger.module;
+
+import com.example.shenhaichen.mobileassistant.data.network.ApiService;
 
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Singleton;
+
+import dagger.Module;
+import dagger.Provides;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -9,15 +15,16 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by shenhaichen on 02/01/2018.
+ * Created by shenhaichen on 03/01/2018.
  */
 
-public class HttpManager {
+@Module
+public class HttpModule {
 
-    public HttpManager() {
-    }
-
-    public OkHttpClient getOkHttpClient() {
+    //网络模块尽量使用单例模式，减少内存消耗
+    @Provides
+    @Singleton
+    public OkHttpClient provideOkHttpClient() {
         //log 拦截器
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         //开发模式记录整个body，否则只记录基本信息如返回200， http协议版本等
@@ -35,8 +42,9 @@ public class HttpManager {
                 .build();
     }
 
-
-    public Retrofit getRetrofit(OkHttpClient okHttpClient) {
+    @Provides
+    @Singleton
+    public Retrofit provideRetrofit(OkHttpClient okHttpClient) {
         Retrofit.Builder builder = new Retrofit.Builder()
                 .baseUrl(ApiService.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -44,6 +52,12 @@ public class HttpManager {
                 .client(okHttpClient);
 
         return builder.build();
+    }
+
+    @Provides
+    @Singleton
+    public ApiService provideApiService(Retrofit retrofit){
+        return retrofit.create(ApiService.class);
     }
 
 }

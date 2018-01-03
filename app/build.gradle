@@ -16,6 +16,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
 }
 
 dependencies {
@@ -25,8 +26,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    compile 'com.jakewharton:butterknife:8.8.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+
     implementation 'com.android.support:design:26.1.0'
     implementation "com.mikepenz:iconics-core:3.0.0@aar"
     implementation 'com.mikepenz:ionicons-typeface:2.0.1.4@aar'
@@ -39,4 +39,11 @@ dependencies {
     compile 'com.squareup.okhttp3:logging-interceptor:3.9.1'
 
     compile 'com.squareup.picasso:picasso:2.5.2'
+
+    compile 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+
+    compile 'com.google.dagger:dagger:2.5'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.5'
+
 }
