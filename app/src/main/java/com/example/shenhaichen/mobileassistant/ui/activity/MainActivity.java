@@ -1,4 +1,4 @@
-package com.example.shenhaichen.mobileassistant;
+package com.example.shenhaichen.mobileassistant.ui.activity;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.shenhaichen.mobileassistant.R;
 import com.example.shenhaichen.mobileassistant.ui.adapter.ViewPagerAdapter;
 
 import butterknife.BindView;
