@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.shenhaichen.mobileassistant.MyApplication;
@@ -37,11 +38,12 @@ public class RecommendFragment extends Fragment implements RecommendContract.Vie
 
     @BindView(R.id.recommend_recycle_view)
     RecyclerView mRecyclerView;
+    @BindView(R.id.recommend_progress_bar)
+    ProgressBar progressBar;
 
     private RecommendAdapter mRecommendAdapter;
     @Inject
     RecommendPresenter mPresenter;
-
 
     @Nullable
     @Override
@@ -81,12 +83,12 @@ public class RecommendFragment extends Fragment implements RecommendContract.Vie
 
     @Override
     public void showLoading() {
-//        mProgressBar.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void dismissLoading() {
-//        mProgressBar.setVisibility(View.GONE);
+      progressBar.setVisibility(View.GONE);
     }
 
     @Override

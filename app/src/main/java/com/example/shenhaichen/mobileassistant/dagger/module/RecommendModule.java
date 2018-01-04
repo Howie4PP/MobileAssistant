@@ -36,5 +36,4 @@ public class RecommendModule {
         return new RecommendPresenter(view, model);
     }
 
-
 }

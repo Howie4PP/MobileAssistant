@@ -5,4 +5,6 @@ package com.example.shenhaichen.mobileassistant.common;
  */
 
 public class Constant {
+
+    public static final String IS_SHOW_SPLASH="is_show_splash";
 }

@@ -10,5 +10,11 @@
     <string name="ranking">排行</string>
     <string name="game">游戏</string>
     <string name="category">分类</string>
+    <string name="try_now">立即体验</string>
+
+    <string name="guide_1">全新改版</string>
+    <string name="guide_2">视频购物</string>
+    <string name="guide_3">评价晒图</string>
+
 
 </resources>

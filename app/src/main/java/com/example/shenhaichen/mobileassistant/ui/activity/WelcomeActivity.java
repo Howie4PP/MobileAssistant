@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.eftimoff.androipathview.PathView;
 import com.example.shenhaichen.mobileassistant.R;
+import com.example.shenhaichen.mobileassistant.common.Constant;
+import com.example.shenhaichen.mobileassistant.common.util.ACache;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -21,15 +23,30 @@ public class WelcomeActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
         //设定svg的动画
-        pathView.getPathAnimator().delay(300).duration(5000)
+        pathView.getPathAnimator().delay(100).duration(3000)
                 .listenerEnd(new PathView.AnimatorBuilder.ListenerEnd() {
                     @Override
                     public void onAnimationEnd() {
-                        startActivity(new Intent(WelcomeActivity.this,MainActivity.class));
-                        WelcomeActivity.this.finish();
+                        transferActivity();
                     }
                 })
                 .start();
+
+    }
+
+    private void transferActivity(){
+        String isShowGuide = ACache.get(this).getAsString(Constant.IS_SHOW_SPLASH);
+
+        // 第一次启动进入引导页面
+        if(null == isShowGuide){
+            startActivity(new Intent(this,SplashActivity.class));
+
+        }
+        else{
+            startActivity(new Intent(this,MainActivity.class));
+        }
+
+        this.finish();
 
     }
 }

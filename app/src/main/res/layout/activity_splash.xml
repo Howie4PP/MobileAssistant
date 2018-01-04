@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.shenhaichen.mobileassistant.ui.activity.SplashActivity">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/splash_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <Button
+        android:id="@+id/splash_btn"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="20dp"
+        android:layout_above="@+id/splash_indicator"
+        android:background="@drawable/shape_splash_btn"
+        android:layout_centerHorizontal="true"
+        android:textSize="18sp"
+        android:visibility="gone"
+        android:textColor="@color/color_w"
+        android:text="@string/try_now"
+        />
+
+    <LinearLayout
+        android:id="@+id/splash_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        >
+        <ImageView
+            android:id="@+id/splash_img_icon_1"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:src="@color/color_w"
+            />
+        <ImageView
+            android:id="@+id/splash_img_icon_2"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginStart="5dp"
+            android:src="@color/colorAccent"
+            />
+        <ImageView
+            android:id="@+id/splash_img_icon_3"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginStart="5dp"
+            android:src="@color/colorAccent"
+            />
+    </LinearLayout>
+
+</RelativeLayout>
