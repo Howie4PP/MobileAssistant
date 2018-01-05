@@ -1,6 +1,7 @@
 package com.example.shenhaichen.mobileassistant.data.network;
 
 import com.example.shenhaichen.mobileassistant.bean.AppInfo;
+import com.example.shenhaichen.mobileassistant.bean.BaseBean;
 import com.example.shenhaichen.mobileassistant.bean.PageBean;
 
 import io.reactivex.Observable;
@@ -13,14 +14,10 @@ import retrofit2.http.Query;
  */
 public interface ApiService {
 
-    String BASE_URL = "http://112.124.22.238:8081/course_api/cniaoplay/";
-
-    //retrofit 参数设定
-//    @GET("featured")
-//    Call<PageBean<AppInfo>> getApps(@Query("p") String jsonParam);
+    String BASE_URL = "*****";
 
     //retrofit与RxJava整合后的写法
     @GET("featured")
-    Observable<PageBean<AppInfo>> getApps(@Query("p") String jsonParam);
+    Observable<BaseBean<PageBean<AppInfo>>> getApps(@Query("p") String jsonParam);
 
 }
