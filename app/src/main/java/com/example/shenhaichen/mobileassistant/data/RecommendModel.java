@@ -4,7 +4,7 @@ import com.example.shenhaichen.mobileassistant.bean.AppInfo;
 import com.example.shenhaichen.mobileassistant.bean.PageBean;
 import com.example.shenhaichen.mobileassistant.data.network.ApiService;
 
-import retrofit2.Callback;
+import io.reactivex.Observable;
 
 /**
  *MVP 架构的 model
@@ -13,16 +13,18 @@ import retrofit2.Callback;
 
 public class RecommendModel {
 
-
     private ApiService mApiService;
 
     public RecommendModel(ApiService apiService) {
         this.mApiService = apiService;
     }
 
-    public void getApps(Callback<PageBean<AppInfo>> mCallBack){
-        //需要外部传入callback
-        mApiService.getApps("{'page':0}").enqueue(mCallBack);
+    /**
+     * @return 返回一个时间源在外部调用
+     */
+    public Observable<PageBean<AppInfo>> getApps(){
+
+       return mApiService.getApps("{'page':0}");
 
     }
 
