@@ -5,4 +5,9 @@ package com.example.shenhaichen.mobileassistant.ui;
  */
 
 public interface BaseView {
+
+    void showLoading();
+    void disMissLoading();
+    void showError(String mes);
+
 }

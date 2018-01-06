@@ -8,7 +8,7 @@ import com.example.shenhaichen.mobileassistant.data.network.ApiService;
 import io.reactivex.Observable;
 
 /**
- *MVP 架构的 model
+ *MVP 架构的 model,负责逻辑处理，这里是调用网络请求
  * Created by shenhaichen on 03/01/2018.
  */
 

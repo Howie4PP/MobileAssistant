@@ -1,7 +1,6 @@
 package com.example.shenhaichen.mobileassistant.presenter.contract;
 
 import com.example.shenhaichen.mobileassistant.bean.AppInfo;
-import com.example.shenhaichen.mobileassistant.presenter.BasePresenter;
 import com.example.shenhaichen.mobileassistant.ui.BaseView;
 
 import java.util.List;
@@ -14,12 +13,6 @@ import java.util.List;
 public interface RecommendContract {
     interface View extends BaseView {
 
-        //加载中
-        void showLoading();
-
-        //完成加载
-        void dismissLoading();
-
         //得到结果
         void showResult(List<AppInfo> mData);
 
@@ -31,9 +24,5 @@ public interface RecommendContract {
 
     }
 
-    interface Presenter extends BasePresenter {
-        //请求数据
-        void requestData();
-    }
 
 }

@@ -1,11 +1,13 @@
 package com.example.shenhaichen.mobileassistant.common.rx.observer;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.shenhaichen.mobileassistant.common.exception.BaseException;
 import com.example.shenhaichen.mobileassistant.common.rx.RxErrorHandler;
 
 /**
+ * RxJava2中的下游类,封装了Error报告的方法
  * Created by shenhaichen on 06/01/2018.
  */
 
@@ -29,14 +31,14 @@ public abstract class ErrorHandlerObserver<T> extends BaseObserver<T> {
         e.printStackTrace();
 
         BaseException baseException =  mErrorHandler.handleError(e);
-//
-//        if(baseException==null){
-//            e.printStackTrace();
-//            Log.d("ErrorHandlerSubscriber",e.getMessage());
-//        }
-//        else {
+
+        if(baseException==null){
+            e.printStackTrace();
+            Log.d("ErrorHandlerSubscriber",e.getMessage());
+        }
+        else {
             mErrorHandler.showErrorMessage(baseException);
-//        }
+        }
 
     }
 }
