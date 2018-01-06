@@ -14,10 +14,10 @@ import retrofit2.http.Query;
  */
 public interface ApiService {
 
-    String BASE_URL = "*****";
+    String BASE_URL = "****";
 
     //retrofit与RxJava整合后的写法
-    @GET("featured")
+    @GET("featured2")
     Observable<BaseBean<PageBean<AppInfo>>> getApps(@Query("p") String jsonParam);
 
 }

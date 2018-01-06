@@ -1,5 +1,8 @@
 package com.example.shenhaichen.mobileassistant.dagger.component;
 
+import android.app.Application;
+
+import com.example.shenhaichen.mobileassistant.common.rx.RxErrorHandler;
 import com.example.shenhaichen.mobileassistant.dagger.module.HttpModule;
 import com.example.shenhaichen.mobileassistant.dagger.module.MyAppModule;
 import com.example.shenhaichen.mobileassistant.data.network.ApiService;
@@ -18,4 +21,8 @@ import dagger.Component;
 public interface AppComponent {
 
     public ApiService getApiService();
+
+    public Application getApplication();
+
+    public RxErrorHandler getRxErrorHandler();
 }

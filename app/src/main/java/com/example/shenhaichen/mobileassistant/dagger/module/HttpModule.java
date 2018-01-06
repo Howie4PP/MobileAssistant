@@ -1,5 +1,8 @@
 package com.example.shenhaichen.mobileassistant.dagger.module;
 
+import android.app.Application;
+
+import com.example.shenhaichen.mobileassistant.common.rx.RxErrorHandler;
 import com.example.shenhaichen.mobileassistant.data.network.ApiService;
 
 import java.util.concurrent.TimeUnit;
@@ -59,6 +62,13 @@ public class HttpModule {
     @Singleton
     public ApiService provideApiService(Retrofit retrofit){
         return retrofit.create(ApiService.class);
+    }
+
+    @Provides
+    @Singleton
+    public RxErrorHandler provideErrorHandlder(Application application){
+
+        return  new RxErrorHandler(application);
     }
 
 }
