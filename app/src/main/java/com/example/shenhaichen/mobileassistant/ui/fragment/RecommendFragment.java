@@ -52,6 +52,7 @@ public class RecommendFragment extends ProgressFragment<RecommendPresenter> impl
     @Override
     public void init() {
         mPresenter.requestData();
+//        mPresenter.requestPermission();
     }
 
     //继承自父类的方法，父类调用
@@ -92,5 +93,17 @@ public class RecommendFragment extends ProgressFragment<RecommendPresenter> impl
     @Override
     public void error(String error) {
         Toast.makeText(getContext(), "无服务器错误啊," + error.toString(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRequestPermissionSuccess() {
+
+
+        Toast.makeText(getActivity(),"yes",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRequestPermissionFailed() {
+        Toast.makeText(getActivity(),"no",Toast.LENGTH_SHORT).show();
     }
 }

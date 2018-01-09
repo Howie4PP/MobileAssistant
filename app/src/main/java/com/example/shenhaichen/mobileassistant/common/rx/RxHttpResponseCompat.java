@@ -8,7 +8,9 @@ import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * RxJava2 转换类， basebean 转换为 pagebean, 并且将请求到的数据发射出去
@@ -42,8 +44,8 @@ public class RxHttpResponseCompat {
                             return Observable.error(new ApiException(tBaseBean.getStatus(), tBaseBean.getMessage()));
                         }
                     }
-
-                });
+                    //先在IO线程中读取网络数据，然后在主线程中进行UI操作
+                }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
             }
         };
 

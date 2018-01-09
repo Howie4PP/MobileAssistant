@@ -22,6 +22,9 @@ public interface RecommendContract {
         //显示错误信息
         void error(String error);
 
+        void onRequestPermissionSuccess();
+        void onRequestPermissionFailed();
+
     }
 
 

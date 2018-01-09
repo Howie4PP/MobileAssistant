@@ -46,7 +46,6 @@ public class HttpParamsInterceptor implements Interceptor {
         //这是拦截器拦截到的请求数据
         Request request = chain.request();
         try {
-
             //判断请求方式，get or post request
             String method = request.method();
             // 一些常用的请求方式
