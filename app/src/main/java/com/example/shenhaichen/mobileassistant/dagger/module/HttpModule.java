@@ -2,8 +2,10 @@ package com.example.shenhaichen.mobileassistant.dagger.module;
 
 import android.app.Application;
 
+import com.example.shenhaichen.mobileassistant.common.http.HttpParamsInterceptor;
 import com.example.shenhaichen.mobileassistant.common.rx.RxErrorHandler;
 import com.example.shenhaichen.mobileassistant.data.network.ApiService;
+import com.google.gson.Gson;
 
 import java.util.concurrent.TimeUnit;
 
@@ -27,7 +29,7 @@ public class HttpModule {
     //网络模块尽量使用单例模式，减少内存消耗
     @Provides
     @Singleton
-    public OkHttpClient provideOkHttpClient() {
+    public OkHttpClient provideOkHttpClient(Application application, Gson gson) {
         //log 拦截器
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         //开发模式记录整个body，否则只记录基本信息如返回200， http协议版本等
@@ -39,6 +41,7 @@ public class HttpModule {
                 //HeadInterceptor实现了Interceptor,用来往 Request header添加一些业务数据，如App版本，token信息
                 //.addInterceptor(new HeadInterceptor())
                 .addInterceptor(logging)
+                .addInterceptor(new HttpParamsInterceptor(application,gson))
                 //连接超时和读取时间的设置
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(10, TimeUnit.SECONDS)
