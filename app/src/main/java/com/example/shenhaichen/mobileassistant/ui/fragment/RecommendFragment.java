@@ -3,21 +3,18 @@ package com.example.shenhaichen.mobileassistant.ui.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
 import com.example.shenhaichen.mobileassistant.R;
-import com.example.shenhaichen.mobileassistant.bean.AppInfo;
+import com.example.shenhaichen.mobileassistant.bean.IndexBean;
 import com.example.shenhaichen.mobileassistant.dagger.component.AppComponent;
 import com.example.shenhaichen.mobileassistant.dagger.component.DaggerRecommendComponent;
 import com.example.shenhaichen.mobileassistant.dagger.module.RecommendModule;
 import com.example.shenhaichen.mobileassistant.presenter.RecommendPresenter;
 import com.example.shenhaichen.mobileassistant.presenter.contract.RecommendContract;
-import com.example.shenhaichen.mobileassistant.ui.adapter.RecommendAdapter;
-
-import java.util.List;
+import com.example.shenhaichen.mobileassistant.ui.adapter.IndexMultiAdapter;
 
 import javax.inject.Inject;
 
@@ -32,7 +29,7 @@ public class RecommendFragment extends ProgressFragment<RecommendPresenter> impl
     @BindView(R.id.recommend_recycle_view)
     RecyclerView mRecyclerView;
 
-    private RecommendAdapter mRecommendAdapter;
+    private IndexMultiAdapter mRecommendAdapter;
     @Inject
     RecommendPresenter mPresenter;
 
@@ -51,8 +48,9 @@ public class RecommendFragment extends ProgressFragment<RecommendPresenter> impl
     //继承自父类的方法，父类调用
     @Override
     public void init() {
+        initRecyclerView();
         mPresenter.requestData();
-//        mPresenter.requestPermission();
+
     }
 
     //继承自父类的方法，父类调用
@@ -70,29 +68,20 @@ public class RecommendFragment extends ProgressFragment<RecommendPresenter> impl
                 .build().inject(this);
     }
 
-    private void initRecyclerView(List<AppInfo> mData) {
-        mRecommendAdapter = new RecommendAdapter(mData, getContext());
+    private void initRecyclerView() {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
-        mRecyclerView.setAdapter(mRecommendAdapter);
+
     }
 
 
     @Override
-    public void showResult(List<AppInfo> mData) {
+    public void showResult(IndexBean mData) {
         //将数据绑定到recyclerView
-        initRecyclerView(mData);
-    }
+        mRecommendAdapter = new IndexMultiAdapter(getContext());
+        mRecommendAdapter.setIndexBean(mData);
+        mRecyclerView.setAdapter(mRecommendAdapter);
 
-    @Override
-    public void noData() {
-        Toast.makeText(getContext(), "无数据啊~~", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void error(String error) {
-        Toast.makeText(getContext(), "无服务器错误啊," + error.toString(), Toast.LENGTH_SHORT).show();
     }
 
     @Override

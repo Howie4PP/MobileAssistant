@@ -2,6 +2,7 @@ package com.example.shenhaichen.mobileassistant.data.network;
 
 import com.example.shenhaichen.mobileassistant.bean.AppInfo;
 import com.example.shenhaichen.mobileassistant.bean.BaseBean;
+import com.example.shenhaichen.mobileassistant.bean.IndexBean;
 import com.example.shenhaichen.mobileassistant.bean.PageBean;
 import com.example.shenhaichen.mobileassistant.bean.requesbean.LoginRequestBean;
 
@@ -19,14 +20,14 @@ import retrofit2.http.Query;
  */
 public interface ApiService {
 
-    String BASE_URL = "*****************";
+    String BASE_URL = "**************";
 
     //retrofit与RxJava整合后的写法
     @GET("featured2")
     Observable<BaseBean<PageBean<AppInfo>>> getApps(@Query("p") String jsonParam);
 
     @GET("index")
-    Observable<BaseBean<AppInfo>> index();
+    Observable<BaseBean<IndexBean >> index();
 
     @GET("toplist")
     Observable<BaseBean<AppInfo>> toplist(@Query("page") int page);

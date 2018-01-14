@@ -2,6 +2,7 @@ package com.example.shenhaichen.mobileassistant.data;
 
 import com.example.shenhaichen.mobileassistant.bean.AppInfo;
 import com.example.shenhaichen.mobileassistant.bean.BaseBean;
+import com.example.shenhaichen.mobileassistant.bean.IndexBean;
 import com.example.shenhaichen.mobileassistant.bean.PageBean;
 import com.example.shenhaichen.mobileassistant.data.network.ApiService;
 
@@ -27,6 +28,11 @@ public class RecommendModel {
 
        return mApiService.getApps("{'page':0}");
 
+    }
+
+    //请求banner数据
+    public Observable<BaseBean<IndexBean>> index(){
+        return mApiService.index();
     }
 
 }

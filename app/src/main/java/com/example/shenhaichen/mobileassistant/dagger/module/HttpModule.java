@@ -2,7 +2,6 @@ package com.example.shenhaichen.mobileassistant.dagger.module;
 
 import android.app.Application;
 
-import com.example.shenhaichen.mobileassistant.common.http.HttpParamsInterceptor;
 import com.example.shenhaichen.mobileassistant.common.rx.RxErrorHandler;
 import com.example.shenhaichen.mobileassistant.data.network.ApiService;
 import com.google.gson.Gson;
@@ -41,7 +40,7 @@ public class HttpModule {
                 //HeadInterceptor实现了Interceptor,用来往 Request header添加一些业务数据，如App版本，token信息
                 //.addInterceptor(new HeadInterceptor())
                 .addInterceptor(logging)
-                .addInterceptor(new HttpParamsInterceptor(application,gson))
+//                .addInterceptor(new HttpParamsInterceptor(application,gson))
                 //连接超时和读取时间的设置
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(10, TimeUnit.SECONDS)

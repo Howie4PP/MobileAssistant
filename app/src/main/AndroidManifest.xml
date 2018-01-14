@@ -26,6 +26,11 @@
         <!--<activity android:name=".ui.activity.MainActivity" />-->
         <activity android:name=".ui.activity.SplashActivity" />
         <!--<activity android:name=".ui.activity.LoginActivity"></activity>-->
+
+        <meta-data
+            android:name="com.bumptech.glide.integration.okhttp3.OkHttpGlideModule"
+            android:value="GlideModule"/>
+
     </application>
 
 </manifest>
