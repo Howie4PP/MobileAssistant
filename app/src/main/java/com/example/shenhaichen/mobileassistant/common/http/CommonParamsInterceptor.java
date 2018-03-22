@@ -3,6 +3,7 @@ package com.example.shenhaichen.mobileassistant.common.http;
 import android.content.Context;
 
 import com.example.shenhaichen.mobileassistant.common.Constant;
+import com.example.shenhaichen.mobileassistant.common.util.DensityUtil;
 import com.example.shenhaichen.mobileassistant.common.util.DeviceUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -26,7 +27,7 @@ import okio.Buffer;
  * Created by shenhaichen on 09/01/2018.
  */
 
-public class HttpParamsInterceptor implements Interceptor {
+public class CommonParamsInterceptor implements Interceptor {
 
     public static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
@@ -35,7 +36,7 @@ public class HttpParamsInterceptor implements Interceptor {
     private Gson mGson;
     private Context mContext;
 
-    public HttpParamsInterceptor(Context context, Gson mGson) {
+    public CommonParamsInterceptor(Context context, Gson mGson) {
         this.mGson = mGson;
         this.mContext = context;
     }
@@ -49,14 +50,14 @@ public class HttpParamsInterceptor implements Interceptor {
             //判断请求方式，get or post request
             String method = request.method();
             // 一些常用的请求方式
-            HashMap<String, Object> commonParamMap = new HashMap<>();
-//            commonParamMap.put(Constant.IMEI, DeviceUtils.getIMEI(mContext));
-            commonParamMap.put(Constant.MODEL, DeviceUtils.getModel());
-            commonParamMap.put(Constant.LANGUAGE, DeviceUtils.getLanguage());
-            commonParamMap.put(Constant.OS, DeviceUtils.getBuildVersionIncremental());
-//        commonParamMap.put(Constant.RESOLUTION, DeviceUtils.(mContext));
-            commonParamMap.put(Constant.SDK, DeviceUtils.getBuildVersionSDK());
-            commonParamMap.put(Constant.DENSITY_SCALE_FACTOR, mContext.getResources().getDisplayMetrics().density + "");
+            HashMap<String, Object> commomParamsMap = new HashMap<>();
+            commomParamsMap.put(Constant.IMEI, DeviceUtils.getIMEI(mContext));
+            commomParamsMap.put(Constant.MODEL, DeviceUtils.getModel());
+            commomParamsMap.put(Constant.LANGUAGE, DeviceUtils.getLanguage());
+            commomParamsMap.put(Constant.OS, DeviceUtils.getBuildVersionIncremental());
+            commomParamsMap.put(Constant.RESOLUTION, DensityUtil.getScreenW(mContext) + "*" + DensityUtil.getScreenH(mContext));
+            commomParamsMap.put(Constant.SDK, DeviceUtils.getBuildVersionSDK() + "");
+            commomParamsMap.put(Constant.DENSITY_SCALE_FACTOR, mContext.getResources().getDisplayMetrics().density + "");
             //封装get请求
             if (method.equals("GET")) {
 
@@ -83,7 +84,8 @@ public class HttpParamsInterceptor implements Interceptor {
                     }
                 }
 
-                rootMap.put("publicParams", commonParamMap);
+                rootMap.put("publicParams", commomParamsMap);
+                // {"page":0,"publicParams":{"imei":'xxxxx',"sdk":14,.....}}
                 String newJsonParams = mGson.toJson(rootMap);
                 //toString 直接返回string的url
                 String url = httpUrl.toString();
@@ -94,7 +96,7 @@ public class HttpParamsInterceptor implements Interceptor {
                 }
 
                 //重新拼接需要的API地址
-                url = url.substring(0, url.indexOf("?")) + "?" + Constant.PARAM + "=" + newJsonParams;
+                url = url + "?" + Constant.PARAM + "=" + newJsonParams;
                 //重新构建请求
                 request = request.newBuilder().url(url).build();
 
@@ -114,14 +116,14 @@ public class HttpParamsInterceptor implements Interceptor {
                     String oldJsonParams = buffer.readUtf8();
                     //转化为需要的数据格式
                     rootMap = mGson.fromJson(oldJsonParams, HashMap.class);
-                    //加入公共参数
-                    rootMap.put("publicParams", commonParamMap);
+                    //重新组装，加入公共参数
+                    rootMap.put("publicParams", commomParamsMap);
 
                     String newJsonParams = mGson.toJson(rootMap);
                     request = request.newBuilder().post(RequestBody.create(JSON, newJsonParams)).build();
                 }
             }
-        }catch (JsonSyntaxException e){
+        } catch (JsonSyntaxException e) {
             e.printStackTrace();
         }
 

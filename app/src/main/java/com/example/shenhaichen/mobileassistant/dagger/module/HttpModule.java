@@ -2,6 +2,8 @@ package com.example.shenhaichen.mobileassistant.dagger.module;
 
 import android.app.Application;
 
+import com.example.shenhaichen.mobileassistant.BuildConfig;
+import com.example.shenhaichen.mobileassistant.common.http.CommonParamsInterceptor;
 import com.example.shenhaichen.mobileassistant.common.rx.RxErrorHandler;
 import com.example.shenhaichen.mobileassistant.data.network.ApiService;
 import com.google.gson.Gson;
@@ -29,18 +31,20 @@ public class HttpModule {
     @Provides
     @Singleton
     public OkHttpClient provideOkHttpClient(Application application, Gson gson) {
-        //log 拦截器
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        //开发模式记录整个body，否则只记录基本信息如返回200， http协议版本等
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-        //如果使用Https,需要创建SSLSocketFactory, 并设置到client
-        //SSLSocketFactory sslSocketFactory = null;
 
-        return new OkHttpClient.Builder()
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+
+        if (BuildConfig.DEBUG){
+            //log 拦截器
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+            //开发模式记录整个body，否则只记录基本信息如返回200， http协议版本等
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+            builder.addInterceptor(logging);
+        }
+
+        return builder
                 //HeadInterceptor实现了Interceptor,用来往 Request header添加一些业务数据，如App版本，token信息
-                //.addInterceptor(new HeadInterceptor())
-                .addInterceptor(logging)
-//                .addInterceptor(new HttpParamsInterceptor(application,gson))
+                .addInterceptor(new CommonParamsInterceptor(application,gson))
                 //连接超时和读取时间的设置
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(10, TimeUnit.SECONDS)
