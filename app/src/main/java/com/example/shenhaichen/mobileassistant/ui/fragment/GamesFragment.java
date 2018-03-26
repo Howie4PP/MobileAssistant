@@ -1,26 +1,33 @@
 package com.example.shenhaichen.mobileassistant.ui.fragment;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.example.shenhaichen.mobileassistant.R;
+import com.example.shenhaichen.mobileassistant.dagger.component.AppComponent;
+import com.example.shenhaichen.mobileassistant.dagger.component.DaggerAppInfoComponent;
+import com.example.shenhaichen.mobileassistant.dagger.module.AppInfoModule;
+import com.example.shenhaichen.mobileassistant.presenter.AppInfoPresenter;
+import com.example.shenhaichen.mobileassistant.ui.adapter.AppInfoAdapter;
 
 /**
  * Created by shenhaichen on 29/12/2017.
  */
 
-public class GamesFragment extends Fragment {
+public class GamesFragment extends BaseAppInfoFragment {
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    int getType() {
+        return AppInfoPresenter.GAME;
+    }
 
-        View view = inflater.inflate(R.layout.fragment_games,container,false);
+    @Override
+    AppInfoAdapter buildAdapter() {
+        return AppInfoAdapter.builder().showPosition(false).showBrief(false)
+                .showCategoryName(false).build();
+    }
 
-        return view;
+    @Override
+    public void setupActivityComponent(AppComponent appComponent) {
+        DaggerAppInfoComponent.builder()
+                .appComponent(appComponent)
+                .appInfoModule(new AppInfoModule(this))
+                .build().injectGameFragment(this);
     }
 }

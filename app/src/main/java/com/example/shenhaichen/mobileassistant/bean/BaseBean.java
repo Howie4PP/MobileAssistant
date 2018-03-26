@@ -1,12 +1,10 @@
 package com.example.shenhaichen.mobileassistant.bean;
 
-import java.io.Serializable;
-
 /**
  * Created by shenhaichen on 05/01/2018.
  */
 
-public class BaseBean<T> implements Serializable{
+public class BaseBean<T> extends BaseEntity{
 
     public static final int SUCCESS = 1;
     private int status;

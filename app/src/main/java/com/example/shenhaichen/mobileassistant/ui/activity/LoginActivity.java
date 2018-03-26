@@ -1,33 +1,46 @@
 package com.example.shenhaichen.mobileassistant.ui.activity;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
+import android.support.design.widget.TextInputLayout;
+import android.support.v7.widget.Toolbar;
 import android.widget.Button;
-import android.widget.Toast;
+import android.widget.EditText;
 
 import com.example.shenhaichen.mobileassistant.R;
-import com.example.shenhaichen.mobileassistant.common.util.DeviceUtils;
+import com.example.shenhaichen.mobileassistant.bean.LoginBean;
 import com.example.shenhaichen.mobileassistant.dagger.component.AppComponent;
+import com.example.shenhaichen.mobileassistant.dagger.component.DaggerLoginComponent;
+import com.example.shenhaichen.mobileassistant.dagger.module.LoginModule;
+import com.example.shenhaichen.mobileassistant.presenter.LoginPresenter;
+import com.example.shenhaichen.mobileassistant.presenter.contract.LoginContract;
+import com.jakewharton.rxbinding2.InitialValueObservable;
+import com.jakewharton.rxbinding2.view.RxView;
+import com.jakewharton.rxbinding2.widget.RxTextView;
+import com.mikepenz.iconics.IconicsDrawable;
+import com.mikepenz.ionicons_typeface_library.Ionicons;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Consumer;
 
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends BaseActivity<LoginPresenter> implements LoginContract.LoginView {
 
-    private static final int READ_PHONE_STATE_CODE = 1000;
+    public static final String DE = LoginActivity.class.getSimpleName();
+
     @BindView(R.id.login_btn)
     Button loginBtn;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        ButterKnife.bind(this);
-    }
+    @BindView(R.id.login_tool_bar)
+    Toolbar mToolBar;
+
+    @BindView(R.id.txt_mobi)
+    EditText txt_mobile;
+    @BindView(R.id.txt_password)
+    EditText txt_pwd;
+
+    @BindView(R.id.view_mobi_wrapper)
+    TextInputLayout mMobileWrapper;
+    @BindView(R.id.view_password_wrapper)
+    TextInputLayout mPwdWrapper;
 
     @Override
     public int setLayout() {
@@ -35,53 +48,94 @@ public class LoginActivity extends BaseActivity {
     }
 
     @Override
-    public void setupAcitivtyComponent(AppComponent appComponent) {
-
+    public void setupActivityComponent(AppComponent appComponent) {
+        DaggerLoginComponent.builder().appComponent(appComponent)
+                .loginModule(new LoginModule(this))
+                .build().injectLoginActivity(this);
     }
 
     @Override
     public void init() {
-
+        initView();
     }
 
-    @OnClick(R.id.login_btn)
-    public void onViewClicked() {
+    private void initView() {
 
-//        RxPermissions rxPermissions = new RxPermissions(this);
-//        rxPermissions.request(Manifest.permission.READ_PHONE_STATE)
-//                .subscribe(new Consumer<Boolean>() {
-//                    @Override
-//                    public void accept(Boolean aBoolean) throws Exception {
-//                        if (aBoolean){
-//                            Toast.makeText(LoginActivity.this,"yes",Toast.LENGTH_LONG).show();
-//                        }else {
-//                            Toast.makeText(LoginActivity.this,"no",Toast.LENGTH_LONG).show();
-//                        }
-//                    }
-//                });
+        mToolBar.setNavigationIcon(
+                new IconicsDrawable(this)
+                        .icon(Ionicons.Icon.ion_ios_arrow_back)
+                        .sizeDp(16)
+                        .color(getResources().getColor(R.color.md_white_1000)
+                        )
+        );
 
-//        // 没有授权
+        InitialValueObservable<CharSequence> obMobile = RxTextView.textChanges(txt_mobile);
+        InitialValueObservable<CharSequence> obPassword = RxTextView.textChanges(txt_pwd);
+        //将两个控件连通其值一起绑定
+        InitialValueObservable.combineLatest(obMobile, obPassword, new BiFunction<CharSequence, CharSequence, Boolean>() {
 
-        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this,new String[]{ Manifest.permission.READ_PHONE_STATE},READ_PHONE_STATE_CODE);
-        }
-        else{
-            // 已经授权
-            String imei = DeviceUtils.getIMEI(this);
-            Toast.makeText(LoginActivity.this,"imei="+imei,Toast.LENGTH_LONG).show();
-        }
+            @Override
+            public Boolean apply(CharSequence mobile, CharSequence pwd) throws Exception {
+                //判断输入的手机号和密码是否符合要求
+                return (isPhoneValid(mobile.toString()) && isPwdValid(pwd.toString()));
+            }
+        }).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                RxView.enabled(loginBtn).accept(aBoolean);
+            }
+        });
+
+        //button的时间点击事件
+        RxView.clicks(loginBtn).subscribe(new Consumer<Object>() {
+            @Override
+            public void accept(Object o) throws Exception {
+
+                mPresenter.login(txt_mobile.getText().toString().trim(), txt_pwd.getText().toString().trim());
+//                Log.d(DE,txt_mobile.getText().toString().trim());
+//                Log.d(DE,txt_pwd.getText().toString().trim());
+            }
+        });
     }
+
+    private boolean isPhoneValid(String phone) {
+        return phone.length() == 11;
+    }
+
+    private boolean isPwdValid(String pwd) {
+        return pwd.length() >= 6;
+    }
+
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if(requestCode == READ_PHONE_STATE_CODE){
-            if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
-                String imei  = DeviceUtils.getIMEI(this);
-                Toast.makeText(LoginActivity.this,"imei="+imei,Toast.LENGTH_LONG).show();
-            }
-            else {
-                Toast.makeText(LoginActivity.this,"用户拒绝授权",Toast.LENGTH_LONG).show();
-            }
-
-        }
+    public void loginSuccess(LoginBean bean) {
+//        Toast.makeText(this,"登陆成功",Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void disMissLoading() {
+
+    }
+
+    @Override
+    public void showError(String mes) {
+
+    }
+
+    @Override
+    public void checkPhoneError() {
+        mMobileWrapper.setError("手机号格式不正确");
+    }
+
+    @Override
+    public void checkPhoneSuccess() {
+        mMobileWrapper.setError("");
+        mMobileWrapper.setErrorEnabled(false);
+    }
+
+
 }

@@ -13,7 +13,7 @@ import com.example.shenhaichen.mobileassistant.dagger.component.AppComponent;
 import com.example.shenhaichen.mobileassistant.dagger.component.DaggerRecommendComponent;
 import com.example.shenhaichen.mobileassistant.dagger.module.RecommendModule;
 import com.example.shenhaichen.mobileassistant.presenter.RecommendPresenter;
-import com.example.shenhaichen.mobileassistant.presenter.contract.RecommendContract;
+import com.example.shenhaichen.mobileassistant.presenter.contract.AppInfoContract;
 import com.example.shenhaichen.mobileassistant.ui.adapter.IndexMultiAdapter;
 
 import javax.inject.Inject;
@@ -24,9 +24,9 @@ import butterknife.BindView;
  * Created by shenhaichen on 29/12/2017.
  */
 
-public class RecommendFragment extends ProgressFragment<RecommendPresenter> implements RecommendContract.View {
+public class RecommendFragment extends ProgressFragment<RecommendPresenter> implements AppInfoContract.View {
 
-    @BindView(R.id.recommend_recycle_view)
+    @BindView(R.id.recycle_view)
     RecyclerView mRecyclerView;
 
     private IndexMultiAdapter mRecommendAdapter;
@@ -42,7 +42,7 @@ public class RecommendFragment extends ProgressFragment<RecommendPresenter> impl
     //继承自父类的方法，父类调用
     @Override
     public int setLayout() {
-        return R.layout.fragment_recomend;
+        return R.layout.template_recycler_view;
     }
 
     //继承自父类的方法，父类调用
@@ -60,7 +60,7 @@ public class RecommendFragment extends ProgressFragment<RecommendPresenter> impl
     }
 
     @Override
-    public void setupAcitivtyComponent(AppComponent appComponent) {
+    public void setupActivityComponent(AppComponent appComponent) {
         //dagger注入
         DaggerRecommendComponent.builder()
                 .appComponent(appComponent)
@@ -79,7 +79,7 @@ public class RecommendFragment extends ProgressFragment<RecommendPresenter> impl
     public void showResult(IndexBean mData) {
         //将数据绑定到recyclerView
         mRecommendAdapter = new IndexMultiAdapter(getContext());
-        mRecommendAdapter.setIndexBean(mData);
+        mRecommendAdapter.setmIndexBean(mData);
         mRecyclerView.setAdapter(mRecommendAdapter);
 
     }

@@ -1,6 +1,5 @@
 package com.example.shenhaichen.mobileassistant.ui.activity;
 
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -8,7 +7,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,12 +14,15 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.shenhaichen.mobileassistant.R;
+import com.example.shenhaichen.mobileassistant.bean.User;
+import com.example.shenhaichen.mobileassistant.dagger.component.AppComponent;
 import com.example.shenhaichen.mobileassistant.ui.adapter.ViewPagerAdapter;
+import com.hwangjr.rxbus.RxBus;
+import com.hwangjr.rxbus.annotation.Subscribe;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener,
+public class MainActivity extends BaseActivity implements View.OnClickListener,
         NavigationView.OnNavigationItemSelectedListener{
     @BindView(R.id.main_drawer_layout)
     DrawerLayout mDrawerLayout;
@@ -34,21 +35,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @BindView(R.id.main_view_pager)
     ViewPager mViewPager;
 
-
     private View headerView;
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public int setLayout() {
+        return R.layout.activity_main;
+    }
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
-
-        initTabLayout();
-        initToolbar();
+    @Override
+    public void setupActivityComponent(AppComponent appComponent) {
 
     }
 
+    @Override
+    public void init() {
+
+        RxBus.get().register(this);
+
+        initTabLayout();
+        initToolbar();
+    }
+
     private void initTabLayout(){
+
+
+
         PagerAdapter mPageAdapter = new ViewPagerAdapter(getSupportFragmentManager(),this);
         mViewPager.setAdapter(mPageAdapter);
 
@@ -106,6 +118,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         return false;
     }
+    @Subscribe
+    public void getUserInfo(User user){
 
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        RxBus.get().unregister(this);
+    }
 }

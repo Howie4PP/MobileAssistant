@@ -62,10 +62,10 @@ public abstract class ProgressFragment<T extends BasePresenter> extends Fragment
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-//        第二步，待外层布局初始化完成，在将需要的布局加入到里程的content中
+//        第二步，待外层布局初始化完成，在将需要的布局加入到里层的content中
         super.onActivityCreated(savedInstanceState);
         this.mApplication = (MyApplication) getActivity().getApplication();
-        setupAcitivtyComponent(mApplication.getmAppComponent());
+        setupActivityComponent(mApplication.getmAppComponent());
         setContentLayout();
         init();
     }
@@ -120,7 +120,7 @@ public abstract class ProgressFragment<T extends BasePresenter> extends Fragment
 
     public abstract void init();
 
-    public abstract  void setupAcitivtyComponent(AppComponent appComponent);
+    public abstract void setupActivityComponent(AppComponent appComponent);
 
     @Override
     public void onDestroy() {

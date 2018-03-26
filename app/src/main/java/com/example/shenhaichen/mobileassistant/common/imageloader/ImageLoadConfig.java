@@ -435,4 +435,5 @@ public class ImageLoadConfig {
             return height;
         }
     }
+
 }

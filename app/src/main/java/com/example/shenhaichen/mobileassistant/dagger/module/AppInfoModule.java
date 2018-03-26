@@ -2,7 +2,6 @@ package com.example.shenhaichen.mobileassistant.dagger.module;
 
 import com.example.shenhaichen.mobileassistant.data.AppInfoModel;
 import com.example.shenhaichen.mobileassistant.data.network.ApiService;
-import com.example.shenhaichen.mobileassistant.presenter.RecommendPresenter;
 import com.example.shenhaichen.mobileassistant.presenter.contract.AppInfoContract;
 
 import dagger.Module;
@@ -13,16 +12,16 @@ import dagger.Provides;
  * Created by shenhaichen on 03/01/2018.
  */
 @Module
-public class RecommendModule {
+public class AppInfoModule {
 
-    private AppInfoContract.View mView;
+    private AppInfoContract.AppInfoView mView;
 
-    public RecommendModule(AppInfoContract.View view) {
+    public AppInfoModule(AppInfoContract.AppInfoView view) {
         this.mView = view;
     }
 
     @Provides
-    public AppInfoContract.View provideView(){
+    public AppInfoContract.AppInfoView provideView(){
         return mView;
     }
 
@@ -31,9 +30,6 @@ public class RecommendModule {
         return new AppInfoModel(apiService);
     }
 
-    @Provides
-    public RecommendPresenter providePresenter(AppInfoContract.View view, AppInfoModel model){
-        return new RecommendPresenter(view, model);
-    }
+
 
 }

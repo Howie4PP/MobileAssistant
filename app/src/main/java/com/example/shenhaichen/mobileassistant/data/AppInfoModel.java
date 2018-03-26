@@ -13,26 +13,34 @@ import io.reactivex.Observable;
  * Created by shenhaichen on 03/01/2018.
  */
 
-public class RecommendModel {
+public class AppInfoModel {
 
     private ApiService mApiService;
 
-    public RecommendModel(ApiService apiService) {
+    public AppInfoModel(ApiService apiService) {
         this.mApiService = apiService;
     }
 
     /**
      * @return 返回一个时间源在外部调用
      */
-    public Observable<BaseBean<PageBean<AppInfo>>> getApps(){
-
-       return mApiService.getApps("{'page':0}");
-
-    }
+//    public Observable<BaseBean<PageBean<AppInfo>>> getApps(){
+//
+//       return mApiService.getApps("{'page':0}");
+//
+//    }
 
     //请求banner数据
     public Observable<BaseBean<IndexBean>> index(){
         return mApiService.index();
+    }
+
+    public Observable<BaseBean<PageBean<AppInfo>>> toplist(int page){
+        return mApiService.toplist(page);
+    }
+
+    public Observable<BaseBean<PageBean<AppInfo>>> game(int page){
+        return mApiService.game(page);
     }
 
 }

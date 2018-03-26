@@ -1,6 +1,8 @@
 package com.example.shenhaichen.mobileassistant.presenter.contract;
 
+import com.example.shenhaichen.mobileassistant.bean.AppInfo;
 import com.example.shenhaichen.mobileassistant.bean.IndexBean;
+import com.example.shenhaichen.mobileassistant.bean.PageBean;
 import com.example.shenhaichen.mobileassistant.ui.BaseView;
 
 /**
@@ -8,7 +10,7 @@ import com.example.shenhaichen.mobileassistant.ui.BaseView;
  * Created by shenhaichen on 03/01/2018.
  */
 
-public interface RecommendContract {
+public interface AppInfoContract {
     interface View extends BaseView {
 
         //得到结果
@@ -19,5 +21,10 @@ public interface RecommendContract {
 
     }
 
+    interface AppInfoView extends BaseView{
+        //得到结果
+        void showResult(PageBean<AppInfo> mData);
+        void onLoadMoreComplete();
+    }
 
 }

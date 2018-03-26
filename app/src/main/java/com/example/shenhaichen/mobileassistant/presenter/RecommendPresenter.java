@@ -3,8 +3,8 @@ package com.example.shenhaichen.mobileassistant.presenter;
 import com.example.shenhaichen.mobileassistant.bean.IndexBean;
 import com.example.shenhaichen.mobileassistant.common.rx.RxHttpResponseCompat;
 import com.example.shenhaichen.mobileassistant.common.rx.observer.ProgressObserver;
-import com.example.shenhaichen.mobileassistant.data.RecommendModel;
-import com.example.shenhaichen.mobileassistant.presenter.contract.RecommendContract;
+import com.example.shenhaichen.mobileassistant.data.AppInfoModel;
+import com.example.shenhaichen.mobileassistant.presenter.contract.AppInfoContract;
 
 import io.reactivex.disposables.Disposable;
 
@@ -12,10 +12,10 @@ import io.reactivex.disposables.Disposable;
  * MVP结构中的集合类，中转站
  * Created by shenhaichen on 03/01/2018.
  */
-public class RecommendPresenter extends BasePresenter<RecommendModel, RecommendContract.View> {
+public class RecommendPresenter extends BasePresenter<AppInfoModel, AppInfoContract.View> {
 
     //    @Inject
-    public RecommendPresenter(RecommendContract.View mView, RecommendModel mModel) {
+    public RecommendPresenter(AppInfoContract.View mView, AppInfoModel mModel) {
         super(mModel, mView);
     }
 

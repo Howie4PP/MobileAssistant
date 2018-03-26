@@ -35,4 +35,9 @@
     <string name="hot_top">热门主题</string>
     <string name="hot_app">热门应用</string>
 
+    <string name="mobi">请输入手机号</string>
+    <string name="password">请输入密码</string>
+    <string name="login">登陆</string>
+
+
 </resources>

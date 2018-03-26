@@ -6,15 +6,20 @@ package com.example.shenhaichen.mobileassistant.bean.requesbean;
 
 public class LoginRequestBean {
 
-    private String phone;
-    private String password;
-
-    public String getPhone() {
-        return phone;
+    public LoginRequestBean(String email, String password) {
+        this.email = email;
+        this.password = password;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    private String email;
+    private String password;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {

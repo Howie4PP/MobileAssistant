@@ -38,7 +38,7 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
         mUnbinder = ButterKnife.bind(this);
         this.mApplication = (MyApplication) getApplication();
 
-        setupAcitivtyComponent(mApplication.getmAppComponent());
+        setupActivityComponent(mApplication.getmAppComponent());
 
         init();
     }
@@ -56,7 +56,7 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
 
     public abstract int setLayout();
 
-    public abstract  void setupAcitivtyComponent(AppComponent appComponent);
+    public abstract  void setupActivityComponent(AppComponent appComponent);
 
     public abstract void  init();
 
