@@ -34,13 +34,21 @@ public class LoginPresenter extends BasePresenter<LoginContract.ILoginModel, Log
 
         mModel.login(phone,pwd).compose(RxHttpResponseCompat.<LoginBean>compatResult())
                 .subscribe(new ErrorHandlerObserver<LoginBean>(mContext) {
+
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        mView.disMissLoading();
+                    }
+
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                          mView.showLoading();
                     }
 
                     @Override
                     public void onNext(LoginBean loginBean) {
+
                         mView.loginSuccess(loginBean);
                         saveUserInfo(loginBean);
 
@@ -50,7 +58,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.ILoginModel, Log
 
                     @Override
                     public void onComplete() {
-
+                        mView.disMissLoading();
                     }
                 });
     }

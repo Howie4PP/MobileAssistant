@@ -54,7 +54,9 @@ public class ErrorMessageFactory {
 
                 break;
 
-
+            case ApiException.ERROR_API_TOKEN_FAILURE:
+                errorMsg = context.getResources().getString(R.string.error_token);
+                break;
 
             case ApiException.ERROR_API_SYSTEM:
                 errorMsg = context.getResources().getString(R.string.error_system);
@@ -72,6 +74,8 @@ public class ErrorMessageFactory {
             case ApiException.ERROR_API_LOGIN:
                 errorMsg = context.getResources().getString(R.string.error_login);
                 break;
+
+
 
 
 

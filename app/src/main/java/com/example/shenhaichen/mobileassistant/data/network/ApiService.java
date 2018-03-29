@@ -19,7 +19,7 @@ import retrofit2.http.Query;
  */
 public interface ApiService {
 
-    String BASE_URL = "XXXXXXXXXXXXX";
+    String BASE_URL = "xxxxxxxxxxxxxxx";
 
     //retrofit与RxJava整合后的写法
     @GET("featured2")

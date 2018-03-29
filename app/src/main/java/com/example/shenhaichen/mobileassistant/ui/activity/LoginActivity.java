@@ -2,7 +2,6 @@ package com.example.shenhaichen.mobileassistant.ui.activity;
 
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
-import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.shenhaichen.mobileassistant.R;
@@ -12,6 +11,7 @@ import com.example.shenhaichen.mobileassistant.dagger.component.DaggerLoginCompo
 import com.example.shenhaichen.mobileassistant.dagger.module.LoginModule;
 import com.example.shenhaichen.mobileassistant.presenter.LoginPresenter;
 import com.example.shenhaichen.mobileassistant.presenter.contract.LoginContract;
+import com.example.shenhaichen.mobileassistant.ui.widget.LoadingButton;
 import com.jakewharton.rxbinding2.InitialValueObservable;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
@@ -27,7 +27,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
     public static final String DE = LoginActivity.class.getSimpleName();
 
     @BindView(R.id.login_btn)
-    Button loginBtn;
+    LoadingButton loginBtn;
 
     @BindView(R.id.login_tool_bar)
     Toolbar mToolBar;
@@ -109,25 +109,27 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
     @Override
     public void loginSuccess(LoginBean bean) {
 //        Toast.makeText(this,"登陆成功",Toast.LENGTH_SHORT).show();
+        this.finish();
     }
 
     @Override
     public void showLoading() {
-
+         loginBtn.showLoading();
     }
 
     @Override
     public void disMissLoading() {
-
+        loginBtn.showButtonText();
     }
 
     @Override
     public void showError(String mes) {
-
+        loginBtn.showButtonText();
     }
 
     @Override
     public void checkPhoneError() {
+
         mMobileWrapper.setError("手机号格式不正确");
     }
 

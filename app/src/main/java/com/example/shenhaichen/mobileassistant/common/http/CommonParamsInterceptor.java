@@ -3,6 +3,7 @@ package com.example.shenhaichen.mobileassistant.common.http;
 import android.content.Context;
 
 import com.example.shenhaichen.mobileassistant.common.Constant;
+import com.example.shenhaichen.mobileassistant.common.util.ACache;
 import com.example.shenhaichen.mobileassistant.common.util.DensityUtil;
 import com.example.shenhaichen.mobileassistant.common.util.DeviceUtils;
 import com.google.gson.Gson;
@@ -51,6 +52,7 @@ public class CommonParamsInterceptor implements Interceptor {
             String method = request.method();
             // 一些常用的请求方式
             HashMap<String, Object> commomParamsMap = new HashMap<>();
+
             commomParamsMap.put(Constant.IMEI, DeviceUtils.getIMEI(mContext));
             commomParamsMap.put(Constant.MODEL, DeviceUtils.getModel());
             commomParamsMap.put(Constant.LANGUAGE, DeviceUtils.getLanguage());
@@ -58,6 +60,10 @@ public class CommonParamsInterceptor implements Interceptor {
             commomParamsMap.put(Constant.RESOLUTION, DensityUtil.getScreenW(mContext) + "*" + DensityUtil.getScreenH(mContext));
             commomParamsMap.put(Constant.SDK, DeviceUtils.getBuildVersionSDK() + "");
             commomParamsMap.put(Constant.DENSITY_SCALE_FACTOR, mContext.getResources().getDisplayMetrics().density + "");
+            //由于服务端的token是直接放在参数中，所以在这里也直接加入到参数当中去
+            String token = ACache.get(mContext).getAsString(Constant.TOKEN);
+            commomParamsMap.put(Constant.TOKEN, token == null ? "" : token);
+
             //封装get请求
             if (method.equals("GET")) {
 
