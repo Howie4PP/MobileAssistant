@@ -6,6 +6,8 @@ import com.example.shenhaichen.mobileassistant.common.rx.observer.ProgressObserv
 import com.example.shenhaichen.mobileassistant.data.AppInfoModel;
 import com.example.shenhaichen.mobileassistant.presenter.contract.AppInfoContract;
 
+import javax.inject.Inject;
+
 import io.reactivex.disposables.Disposable;
 
 /**
@@ -14,7 +16,7 @@ import io.reactivex.disposables.Disposable;
  */
 public class RecommendPresenter extends BasePresenter<AppInfoModel, AppInfoContract.View> {
 
-    //    @Inject
+    @Inject
     public RecommendPresenter(AppInfoContract.View mView, AppInfoModel mModel) {
         super(mModel, mView);
     }

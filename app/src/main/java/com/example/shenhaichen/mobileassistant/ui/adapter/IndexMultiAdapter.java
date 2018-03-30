@@ -43,7 +43,7 @@ public class IndexMultiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public IndexMultiAdapter(Context context) {
         this.mContext = context;
-        mLayoutInflater = LayoutInflater.from(context);
+        mLayoutInflater = LayoutInflater.from(mContext);
     }
 
     public void setmIndexBean(IndexBean mIndexBean) {

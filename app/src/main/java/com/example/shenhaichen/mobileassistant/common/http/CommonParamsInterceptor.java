@@ -1,6 +1,7 @@
 package com.example.shenhaichen.mobileassistant.common.http;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.example.shenhaichen.mobileassistant.common.Constant;
 import com.example.shenhaichen.mobileassistant.common.util.ACache;
@@ -120,13 +121,17 @@ public class CommonParamsInterceptor implements Interceptor {
                     //读取成字符串
                     body.writeTo(buffer);
                     String oldJsonParams = buffer.readUtf8();
-                    //转化为需要的数据格式
-                    rootMap = mGson.fromJson(oldJsonParams, HashMap.class);
-                    //重新组装，加入公共参数
-                    rootMap.put("publicParams", commomParamsMap);
-
-                    String newJsonParams = mGson.toJson(rootMap);
-                    request = request.newBuilder().post(RequestBody.create(JSON, newJsonParams)).build();
+                    //当得到的Json数据不为空的时候，才进行操作
+                    if (!TextUtils.isEmpty(oldJsonParams)){
+                        //转化为需要的数据格式
+                        rootMap = mGson.fromJson(oldJsonParams, HashMap.class);
+                        if (rootMap != null){
+                            //重新组装，加入公共参数
+                            rootMap.put("publicParams", commomParamsMap);
+                            String newJsonParams = mGson.toJson(rootMap);
+                            request = request.newBuilder().post(RequestBody.create(JSON, newJsonParams)).build();
+                        }
+                    }
                 }
             }
         } catch (JsonSyntaxException e) {

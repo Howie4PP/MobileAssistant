@@ -3,7 +3,7 @@
     package="com.example.shenhaichen.mobileassistant">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
@@ -25,12 +25,13 @@
         </activity>
         <activity android:name=".ui.activity.WelcomeActivity" />
         <activity android:name=".ui.activity.SplashActivity" />
-        <activity android:name=".ui.activity.LoginActivity"/>
+        <activity android:name=".ui.activity.LoginActivity" />
 
         <meta-data
             android:name="com.bumptech.glide.integration.okhttp3.OkHttpGlideModule"
-            android:value="GlideModule"/>
+            android:value="GlideModule" />
 
+        <activity android:name=".ui.activity.CategoryAppActivity"></activity>
     </application>
 
 </manifest>
