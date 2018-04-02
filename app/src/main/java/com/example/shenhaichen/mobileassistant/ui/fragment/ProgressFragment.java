@@ -34,7 +34,7 @@ public abstract class ProgressFragment<T extends BasePresenter> extends Fragment
     private Unbinder unbinder;
     private TextView tipTextView;
 
-    private MyApplication mApplication;
+    protected MyApplication mApplication;
 
     @Inject
     T mPresenter;

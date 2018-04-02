@@ -1,15 +1,19 @@
 package com.example.shenhaichen.mobileassistant.ui.fragment;
 
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.example.shenhaichen.mobileassistant.R;
 import com.example.shenhaichen.mobileassistant.bean.AppInfo;
 import com.example.shenhaichen.mobileassistant.bean.PageBean;
 import com.example.shenhaichen.mobileassistant.dagger.component.AppComponent;
 import com.example.shenhaichen.mobileassistant.presenter.AppInfoPresenter;
 import com.example.shenhaichen.mobileassistant.presenter.contract.AppInfoContract;
+import com.example.shenhaichen.mobileassistant.ui.activity.AppDetailActivity;
 import com.example.shenhaichen.mobileassistant.ui.adapter.AppInfoAdapter;
 import com.example.shenhaichen.mobileassistant.ui.decoration.DividerItemDecoration;
 
@@ -22,7 +26,7 @@ import butterknife.BindView;
  */
 
 public abstract class BaseAppInfoFragment extends ProgressFragment<AppInfoPresenter> implements
-        AppInfoContract.AppInfoView, BaseQuickAdapter.RequestLoadMoreListener{
+        AppInfoContract.AppInfoView, BaseQuickAdapter.RequestLoadMoreListener {
 
     @BindView(R.id.recycle_view)
     RecyclerView mRecyclerView;
@@ -45,17 +49,18 @@ public abstract class BaseAppInfoFragment extends ProgressFragment<AppInfoPresen
     @Override
     public void init() {
         type = getType();
-        mPresenter.requestData(type,page);
+        mPresenter.requestData(type, page);
         initRecyclerView();
     }
 
     /**
      * 根据不同的fragment,去设定不同的类型来获取数据
+     *
      * @return
      */
     abstract int getType();
 
-    protected void initRecyclerView(){
+    protected void initRecyclerView() {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         DividerItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
@@ -64,22 +69,34 @@ public abstract class BaseAppInfoFragment extends ProgressFragment<AppInfoPresen
         mAdapter = buildAdapter();
         mAdapter.setOnLoadMoreListener(this);
         mRecyclerView.setAdapter(mAdapter);
+
+        //每一个app项目都必须要跳到具体的app页面
+        mRecyclerView.addOnItemTouchListener(new OnItemClickListener() {
+            @Override
+            public void onSimpleItemClick(BaseQuickAdapter adapter, View view, int position) {
+                // 这是保存被点击的item的图像
+                mApplication.setmView(view);
+                startActivity(new Intent(getActivity(), AppDetailActivity.class));
+            }
+        });
     }
 
     /**
      * 根据不同的fragment,去实例化不同的adapter
+     *
      * @return
      */
     abstract AppInfoAdapter buildAdapter();
 
     @Override
-    public void setupActivityComponent(AppComponent appComponent) {}
+    public void setupActivityComponent(AppComponent appComponent) {
+    }
 
     @Override
     public void showResult(PageBean<AppInfo> mData) {
         mAdapter.addData(mData.getDatas());
         //如果有多页的数据
-        if (mData.isHasMore()){
+        if (mData.isHasMore()) {
             page++;
         }
         mAdapter.setEnableLoadMore(mData.isHasMore());
@@ -87,7 +104,7 @@ public abstract class BaseAppInfoFragment extends ProgressFragment<AppInfoPresen
 
     @Override
     public void onLoadMoreRequested() {
-        mPresenter.requestData(type,page);
+        mPresenter.requestData(type, page);
     }
 
     @Override
