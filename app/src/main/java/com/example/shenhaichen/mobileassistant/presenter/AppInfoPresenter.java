@@ -23,13 +23,39 @@ public class AppInfoPresenter extends BasePresenter<AppInfoModel, AppInfoContrac
 
     public static final int RANKING = 1;
     public static final int GAME = 2;
+    public static final int CATEGORY = 3;
+
+    public static final int FEATURED = 0;
+    public static final int TOPLIST = 1;
+    public static final int LATEST = 2;
 
     @Inject
     public AppInfoPresenter(AppInfoModel appInfoModel, AppInfoContract.AppInfoView rankingView) {
         super(appInfoModel, rankingView);
     }
 
-    public void getData(int type, int page) {
+    /**
+     * 要求普通的APP数据
+     *
+     * @param type
+     * @param page
+     */
+    public void requestData(int type, int page) {
+        request(type, page, 0, 0);
+    }
+
+    /**
+     * 请求分类App数据
+     *
+     * @param page
+     * @param categoryId
+     * @param flagType
+     */
+    public void requestCategory(int page, int categoryId, int flagType) {
+        request(CATEGORY, page, categoryId, flagType);
+    }
+
+    private void request(int type, int page, int categoryId, int flagType) {
         //在下拉加载的时候，是需要判断的页码的, 重复调用的相同的话，会覆盖掉原来的数据
         Observer observer = null;
 
@@ -66,7 +92,7 @@ public class AppInfoPresenter extends BasePresenter<AppInfoModel, AppInfoContrac
             };
         }
 
-        getObservable(type,page)
+        getObservable(type, page, categoryId, flagType)
                 .compose(RxHttpResponseCompat.<PageBean<AppInfo>>compatResult())
                 .subscribe(observer);
 
@@ -74,21 +100,29 @@ public class AppInfoPresenter extends BasePresenter<AppInfoModel, AppInfoContrac
 
     /**
      * 根据不同的要求，去请求不同的数据来源
+     *
      * @param type
      * @param page
      * @return
      */
-    private Observable<BaseBean<PageBean<AppInfo>>> getObservable(int type, int page) {
+    private Observable<BaseBean<PageBean<AppInfo>>> getObservable(int type, int page, int categoryId, int flagType) {
         switch (type) {
             case RANKING:
                 return mModel.toplist(page);
             case GAME:
                 return mModel.game(page);
+            case CATEGORY:
+                //去获得不同的分类app
+                if (flagType == FEATURED) {
+                    return mModel.getFeaturedAppsByCategory(categoryId, page);
+                } else if (flagType == TOPLIST) {
+                    return mModel.getTopListAppsByCategory(categoryId, page);
+                } else if (flagType == LATEST) {
+                    return mModel.getNewListAppsByCategory(categoryId, page);
+                }
             default:
                 return Observable.empty();
         }
 
     }
-
-
 }

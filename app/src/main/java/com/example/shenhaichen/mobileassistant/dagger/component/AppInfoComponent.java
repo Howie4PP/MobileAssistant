@@ -2,6 +2,7 @@ package com.example.shenhaichen.mobileassistant.dagger.component;
 
 import com.example.shenhaichen.mobileassistant.dagger.module.AppInfoModule;
 import com.example.shenhaichen.mobileassistant.dagger.scope.FragmentScope;
+import com.example.shenhaichen.mobileassistant.ui.fragment.CategoryAppFragment;
 import com.example.shenhaichen.mobileassistant.ui.fragment.GamesFragment;
 import com.example.shenhaichen.mobileassistant.ui.fragment.RankingFragment;
 
@@ -16,4 +17,5 @@ public interface AppInfoComponent {
 
     void injectRankingFragment(RankingFragment fragment);
     void injectGameFragment(GamesFragment fragment);
+    void injectCategoryAppFragment(CategoryAppFragment fragment);
 }

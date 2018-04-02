@@ -29,8 +29,8 @@ public abstract class BaseAppInfoFragment extends ProgressFragment<AppInfoPresen
 
     protected AppInfoAdapter mAdapter;
 
-    private int page = 0;
-    private int type = 0;
+    public int page = 0;
+    public int type = 0;
 
     @Override
     public void onEmptyViewClick() {
@@ -45,7 +45,7 @@ public abstract class BaseAppInfoFragment extends ProgressFragment<AppInfoPresen
     @Override
     public void init() {
         type = getType();
-        mPresenter.getData(type,page);
+        mPresenter.requestData(type,page);
         initRecyclerView();
     }
 
@@ -55,7 +55,7 @@ public abstract class BaseAppInfoFragment extends ProgressFragment<AppInfoPresen
      */
     abstract int getType();
 
-    private void initRecyclerView(){
+    protected void initRecyclerView(){
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         DividerItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
@@ -87,7 +87,7 @@ public abstract class BaseAppInfoFragment extends ProgressFragment<AppInfoPresen
 
     @Override
     public void onLoadMoreRequested() {
-        mPresenter.getData(type,page);
+        mPresenter.requestData(type,page);
     }
 
     @Override
