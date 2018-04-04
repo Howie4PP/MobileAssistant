@@ -10,6 +10,7 @@ import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.example.shenhaichen.mobileassistant.R;
 import com.example.shenhaichen.mobileassistant.bean.AppInfo;
 import com.example.shenhaichen.mobileassistant.bean.PageBean;
+import com.example.shenhaichen.mobileassistant.common.Constant;
 import com.example.shenhaichen.mobileassistant.dagger.component.AppComponent;
 import com.example.shenhaichen.mobileassistant.presenter.AppInfoPresenter;
 import com.example.shenhaichen.mobileassistant.presenter.contract.AppInfoContract;
@@ -35,11 +36,6 @@ public abstract class BaseAppInfoFragment extends ProgressFragment<AppInfoPresen
 
     public int page = 0;
     public int type = 0;
-
-    @Override
-    public void onEmptyViewClick() {
-
-    }
 
     @Override
     public int setLayout() {
@@ -74,9 +70,13 @@ public abstract class BaseAppInfoFragment extends ProgressFragment<AppInfoPresen
         mRecyclerView.addOnItemTouchListener(new OnItemClickListener() {
             @Override
             public void onSimpleItemClick(BaseQuickAdapter adapter, View view, int position) {
+
+                AppInfo appInfo = mAdapter.getItem(position);
                 // 这是保存被点击的item的图像
                 mApplication.setmView(view);
-                startActivity(new Intent(getActivity(), AppDetailActivity.class));
+                Intent intent = new Intent(getActivity(), AppDetailActivity.class);
+                intent.putExtra(Constant.APPINTO,appInfo);
+                startActivity(intent);
             }
         });
     }

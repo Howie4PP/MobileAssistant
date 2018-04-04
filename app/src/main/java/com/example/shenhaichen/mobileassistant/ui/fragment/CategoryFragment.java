@@ -34,10 +34,6 @@ public class CategoryFragment extends ProgressFragment<CategoryPresenter> implem
 
     private CategoryAdapter categoryAdapter;
 
-    @Override
-    public void onEmptyViewClick() {
-
-    }
 
     @Override
     public int setLayout() {

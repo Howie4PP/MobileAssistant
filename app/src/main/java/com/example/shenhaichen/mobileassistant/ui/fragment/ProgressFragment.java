@@ -91,7 +91,9 @@ public abstract class ProgressFragment<T extends BasePresenter> extends Fragment
         }
     }
 
-    public abstract void onEmptyViewClick();
+    public void onEmptyViewClick(){
+
+    }
 
     //父类私有方法
     private void showProgress() {

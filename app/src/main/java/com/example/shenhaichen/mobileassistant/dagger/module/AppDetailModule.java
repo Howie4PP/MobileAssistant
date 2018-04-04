@@ -10,21 +10,17 @@ import dagger.Provides;
  * Created by shenhaichen on 03/01/2018.
  */
 @Module(includes = AppModelProviderModule.class)
-public class AppInfoModule {
+public class AppDetailModule {
 
-    private AppInfoContract.AppInfoView mView;
+    private AppInfoContract.AppDetailView mView;
 
-    public AppInfoModule(AppInfoContract.AppInfoView view) {
-        this.mView = view;
+    public AppDetailModule(AppInfoContract.AppDetailView view) {
+        mView = view;
     }
 
     @Provides
-    public AppInfoContract.AppInfoView provideView(){
+    public AppInfoContract.AppDetailView provideView(){
         return mView;
     }
-
-
-
-
 
 }

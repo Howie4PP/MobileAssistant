@@ -50,6 +50,15 @@
     <string name="logining">正在登陆...</string>
     <string name="logout">退出登录</string>
     <string name="download">下载</string>
+    <string name="app_describe">应用描述</string>
+    <string name="app_relate">相关应用</string>
+    <string name="app_developer">相同应用开发者</string>
+    <string name="app_size">相同大小</string>
+    <string name="latest_version">最新版本</string>
+    <string name="update_time">更新时间</string>
+    <string name="information">详细信息</string>
+    <string name="developer">开发者</string>
+    <string name="author">Howie_chen</string>
 
 
 </resources>

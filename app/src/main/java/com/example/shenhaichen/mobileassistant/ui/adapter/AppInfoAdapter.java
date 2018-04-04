@@ -21,7 +21,7 @@ public class AppInfoAdapter extends BaseQuickAdapter<AppInfo, BaseViewHolder> {
     private Builder mBuilder;
 
     private AppInfoAdapter(Builder builder) {
-        super(R.layout.template_appinfo);
+        super(builder.layoutId);
 
         this.mBuilder = builder;
         openLoadAnimation();
@@ -39,27 +39,39 @@ public class AppInfoAdapter extends BaseQuickAdapter<AppInfo, BaseViewHolder> {
     @Override
     protected void convert(BaseViewHolder helper, AppInfo item) {
         ImageLoader.load(baseImgUrl + item.getIcon(), (ImageView) helper.getView(R.id.img_app_icon));
-
         helper.setText(R.id.txt_app_name, item.getDisplayName())
                 .setText(R.id.txt_brief, item.getBriefShow());
 
         TextView txtViewPosition = helper.getView(R.id.txt_position);
-        txtViewPosition.setVisibility(mBuilder.isShowPosition ? View.VISIBLE : View.GONE);
-        txtViewPosition.setText(item.getPosition() + 1 + ". ");
+        if (txtViewPosition != null) {
+            txtViewPosition.setVisibility(mBuilder.isShowPosition ? View.VISIBLE : View.GONE);
+            txtViewPosition.setText(item.getPosition() + 1 + ". ");
+        }
 
         TextView txtViewCategory = helper.getView(R.id.txt_category);
-        txtViewCategory.setVisibility(mBuilder.isShowCategoryName ? View.VISIBLE : View.GONE);
-        txtViewCategory.setText(item.getLevel1CategoryName());
+        if (txtViewCategory != null) {
+            txtViewCategory.setVisibility(mBuilder.isShowCategoryName ? View.VISIBLE : View.GONE);
+            txtViewCategory.setText(item.getLevel1CategoryName());
+        }
 
         TextView txtViewBrief = helper.getView(R.id.txt_brief);
-        txtViewBrief.setVisibility(mBuilder.isShowBrief ? View.VISIBLE : View.GONE);
-        txtViewBrief.setText(item.getBriefShow());
+        if (txtViewBrief != null) {
+            txtViewBrief.setVisibility(mBuilder.isShowBrief ? View.VISIBLE : View.GONE);
+            txtViewBrief.setText(item.getBriefShow());
+        }
+
+        TextView textViewSize = helper.getView(R.id.txt_apk_size);
+        if (textViewSize != null){
+            textViewSize.setText((item.getApkSize() / 1014 / 1024) + "MB");
+        }
     }
 
     public static class Builder {
         private boolean isShowPosition;
         private boolean isShowCategoryName;
         private boolean isShowBrief;
+        //默认的布局
+        private int layoutId = R.layout.template_appinfo_horizontal;
 
         public Builder showPosition(boolean isShow) {
             this.isShowPosition = isShow;
@@ -80,6 +92,15 @@ public class AppInfoAdapter extends BaseQuickAdapter<AppInfo, BaseViewHolder> {
             return new AppInfoAdapter(this);
         }
 
+        /**
+         * 使用自己定义的布局
+         * @param resId
+         * @return
+         */
+        public Builder layout(int resId){
+            this.layoutId = resId;
+            return this;
+        }
     }
 
 

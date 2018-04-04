@@ -7,10 +7,10 @@
     android:background="#60000000"
     tools:context="com.example.shenhaichen.mobileassistant.ui.activity.AppDetailActivity">
 
-    <ImageView
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/app_detail_img"
+        android:id="@+id/view_content"
         />
 
 </LinearLayout>
