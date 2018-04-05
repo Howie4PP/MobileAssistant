@@ -5,8 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -40,18 +38,11 @@ public class AppDetailActivity extends BaseActivity<AppDetailPresenter> {
     FrameLayout mFrameLayout;
     @BindView(R.id.img_icon)
     ImageView mImgIcon;
-
     @BindView(R.id.icon_temp)
     View mIcon_temp;
-    @BindView(R.id.linear_layout_temp)
-    LinearLayout mLinearLayout_temp;
-
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
-    @BindView(R.id.toolbar_layout)
-    CollapsingToolbarLayout mToolbarLayout;
-    @BindView(R.id.app_bar)
-    AppBarLayout mAppBar;
+
     @BindView(R.id.txt_name)
     TextView mTxtName;
     @BindView(R.id.view_coordinator)
@@ -74,7 +65,11 @@ public class AppDetailActivity extends BaseActivity<AppDetailPresenter> {
 
         mAppInfo = (AppInfo) getIntent().getSerializableExtra(Constant.APPINTO);
 
+        //设置Icon图标和标题
+        ImageLoader.load(Constant.BASE_IMG_URL + mAppInfo.getIcon(), mImgIcon);
+        mTxtName.setText(mAppInfo.getDisplayName());
 
+        //设置返回的导航键
         mToolbar.setNavigationIcon(
                 new IconicsDrawable(this)
                         .icon(Ionicons.Icon.ion_ios_arrow_back)
@@ -148,9 +143,6 @@ public class AppDetailActivity extends BaseActivity<AppDetailPresenter> {
      * frameLayout 的扩展动画
      */
     private void extend() {
-        //设置Icon图标和标题
-        ImageLoader.load(Constant.BASE_IMG_URL+mAppInfo.getIcon(),mImgIcon);
-        mTxtName.setText(mAppInfo.getDisplayName());
 
         int height = DensityUtil.getScreenH(this);
         ObjectAnimator animator = ObjectAnimator.ofFloat(mIcon_temp, "scaleY",
@@ -163,10 +155,8 @@ public class AppDetailActivity extends BaseActivity<AppDetailPresenter> {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                mTxtName.setVisibility(View.VISIBLE);
-                mAppBar.setVisibility(View.VISIBLE);
-                mFrameLayout.setVisibility(View.VISIBLE);
-                mLinearLayout_temp.setVisibility(View.GONE);
+                mIcon_temp.setVisibility(View.GONE);
+                mViewCoordinator.setVisibility(View.VISIBLE);
                 //动画结束之后显示内容页面
                 initFragment();
             }
