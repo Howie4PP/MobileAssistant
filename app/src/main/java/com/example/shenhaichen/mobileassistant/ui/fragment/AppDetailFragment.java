@@ -30,10 +30,6 @@ import butterknife.BindView;
 
 public class AppDetailFragment extends ProgressFragment<AppDetailPresenter> implements AppInfoContract.AppDetailView {
 
-    @BindView(R.id.img_icon_app)
-    ImageView mImgIconApp;
-    @BindView(R.id.text_app)
-    TextView mTextApp;
     @BindView(R.id.view_gallery_app)
     LinearLayout mViewGallery;
     @BindView(R.id.expandable_text)
@@ -95,7 +91,7 @@ public class AppDetailFragment extends ProgressFragment<AppDetailPresenter> impl
         mViewIntroductionApp.setText(appInfo.getIntroduction());
         //获取App基本信息
         mTxtUpdateTimeApp.setText(DateUtils.formatDate(appInfo.getUpdateTime()));
-        mTxtApkSizeApp.setText((appInfo.getApkSize() / 1014 / 1024) + "mb");
+        mTxtApkSizeApp.setText((appInfo.getApkSize() / 1014 / 1024) + "MB");
         mTxtPublisherApp.setText(appInfo.getPublisherName());
         mTxtPublisher2App.setText(appInfo.getPublisherName());
 

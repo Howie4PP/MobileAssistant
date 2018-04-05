@@ -49,6 +49,11 @@ public abstract class BaseAppInfoFragment extends ProgressFragment<AppInfoPresen
         initRecyclerView();
     }
 
+    @Override
+    public void onEmptyViewClick() {
+        mPresenter.requestData(type, page);
+    }
+
     /**
      * 根据不同的fragment,去设定不同的类型来获取数据
      *

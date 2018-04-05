@@ -8,5 +8,6 @@
     <dimen name="dp_15">15dp</dimen>
     <dimen name="dp_18">18dp</dimen>
     <dimen name="dp_150">150dp</dimen>
+    <dimen name="dp_160">160dp</dimen>
     <dimen name="sp_14">14sp</dimen>
 </resources>

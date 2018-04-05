@@ -14,21 +14,6 @@
         android:orientation="vertical"
         android:paddingBottom="@dimen/dp_20"
         android:paddingTop="@dimen/dp_20">
-
-        <ImageView
-            android:id="@+id/img_icon_app"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_gravity="center|top" />
-
-        <TextView
-            android:id="@+id/text_app"
-            style="@style/Text_Title_Large"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|top"
-            android:elevation="5dp"
-            android:textColor="@color/white" />
     </LinearLayout>
 
     <HorizontalScrollView

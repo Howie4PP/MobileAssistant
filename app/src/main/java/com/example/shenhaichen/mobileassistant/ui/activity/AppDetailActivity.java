@@ -5,20 +5,29 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.shenhaichen.mobileassistant.R;
 import com.example.shenhaichen.mobileassistant.bean.AppInfo;
 import com.example.shenhaichen.mobileassistant.common.Constant;
+import com.example.shenhaichen.mobileassistant.common.imageloader.ImageLoader;
 import com.example.shenhaichen.mobileassistant.common.util.DensityUtil;
 import com.example.shenhaichen.mobileassistant.dagger.component.AppComponent;
 import com.example.shenhaichen.mobileassistant.presenter.AppDetailPresenter;
 import com.example.shenhaichen.mobileassistant.ui.fragment.AppDetailFragment;
+import com.mikepenz.iconics.IconicsDrawable;
+import com.mikepenz.ionicons_typeface_library.Ionicons;
 
 import butterknife.BindView;
 
@@ -29,6 +38,24 @@ public class AppDetailActivity extends BaseActivity<AppDetailPresenter> {
 
     @BindView(R.id.view_content)
     FrameLayout mFrameLayout;
+    @BindView(R.id.img_icon)
+    ImageView mImgIcon;
+
+    @BindView(R.id.icon_temp)
+    View mIcon_temp;
+    @BindView(R.id.linear_layout_temp)
+    LinearLayout mLinearLayout_temp;
+
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
+    @BindView(R.id.toolbar_layout)
+    CollapsingToolbarLayout mToolbarLayout;
+    @BindView(R.id.app_bar)
+    AppBarLayout mAppBar;
+    @BindView(R.id.txt_name)
+    TextView mTxtName;
+    @BindView(R.id.view_coordinator)
+    CoordinatorLayout mViewCoordinator;
 
     private AppInfo mAppInfo;
 
@@ -47,10 +74,26 @@ public class AppDetailActivity extends BaseActivity<AppDetailPresenter> {
 
         mAppInfo = (AppInfo) getIntent().getSerializableExtra(Constant.APPINTO);
 
+
+        mToolbar.setNavigationIcon(
+                new IconicsDrawable(this)
+                        .icon(Ionicons.Icon.ion_ios_arrow_back)
+                        .sizeDp(16)
+                        .color(getResources().getColor(R.color.md_white_1000)
+                        )
+        );
+
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         View view = mApplication.getmView();
         Bitmap bitmap = getViewImageCache(view);
         if (bitmap != null) {
-            mFrameLayout.setBackgroundDrawable(new BitmapDrawable(bitmap));
+            mIcon_temp.setBackground(new BitmapDrawable(bitmap));
         }
         setItemLocation(view);
         extend();
@@ -67,7 +110,7 @@ public class AppDetailActivity extends BaseActivity<AppDetailPresenter> {
         int left = location[0];
         int top = location[1];
 
-        ViewGroup.MarginLayoutParams marginLayoutParams = new ViewGroup.MarginLayoutParams(mFrameLayout.getLayoutParams());
+        ViewGroup.MarginLayoutParams marginLayoutParams = new ViewGroup.MarginLayoutParams(mIcon_temp.getLayoutParams());
         //需要减去状态栏的高度，要不然实际图像会比RecyclerView中的item低
         marginLayoutParams.topMargin = top - DensityUtil.getStatusBarH(this);
         marginLayoutParams.leftMargin = left;
@@ -76,35 +119,8 @@ public class AppDetailActivity extends BaseActivity<AppDetailPresenter> {
         //得到位置后
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(marginLayoutParams);
         //设置到imageView中，让这个imageView与原来的item位置保持一致
-        mFrameLayout.setLayoutParams(params);
+        mIcon_temp.setLayoutParams(params);
 
-    }
-
-    /**
-     * frameLayout 的扩展动画
-     */
-    private void extend() {
-
-        int height = DensityUtil.getScreenH(this);
-
-        ObjectAnimator animator = ObjectAnimator.ofFloat(mFrameLayout, "scaleY",
-                1f, (float) height);
-        animator.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                mFrameLayout.setBackgroundColor(getResources().getColor(R.color.white));
-            }
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                //动画结束之后显示内容页面
-                initFragment();
-            }
-        });
-
-        //动画延迟
-        animator.setStartDelay(400);
-        animator.setDuration(10000);
-        animator.start();
     }
 
     /**
@@ -127,6 +143,41 @@ public class AppDetailActivity extends BaseActivity<AppDetailPresenter> {
         view.destroyDrawingCache();
         return bitmap;
     }
+
+    /**
+     * frameLayout 的扩展动画
+     */
+    private void extend() {
+        //设置Icon图标和标题
+        ImageLoader.load(Constant.BASE_IMG_URL+mAppInfo.getIcon(),mImgIcon);
+        mTxtName.setText(mAppInfo.getDisplayName());
+
+        int height = DensityUtil.getScreenH(this);
+        ObjectAnimator animator = ObjectAnimator.ofFloat(mIcon_temp, "scaleY",
+                1f, (float) height);
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                mIcon_temp.setBackgroundColor(getResources().getColor(R.color.white));
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mTxtName.setVisibility(View.VISIBLE);
+                mAppBar.setVisibility(View.VISIBLE);
+                mFrameLayout.setVisibility(View.VISIBLE);
+                mLinearLayout_temp.setVisibility(View.GONE);
+                //动画结束之后显示内容页面
+                initFragment();
+            }
+        });
+
+        //动画延迟
+        animator.setStartDelay(1000);
+//        animator.setDuration(10000);
+        animator.start();
+    }
+
 
     /**
      * 将fragment加入到frameLayout之中去

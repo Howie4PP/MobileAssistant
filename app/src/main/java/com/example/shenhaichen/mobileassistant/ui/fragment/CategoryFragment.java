@@ -66,6 +66,11 @@ public class CategoryFragment extends ProgressFragment<CategoryPresenter> implem
     }
 
     @Override
+    public void onEmptyViewClick() {
+        mPresenter.getAllCategory();
+    }
+
+    @Override
     public void setupActivityComponent(AppComponent appComponent) {
         DaggerCategoryComponent.builder().appComponent(appComponent)
                 .categoryModule(new CategoryModule(this)).build()

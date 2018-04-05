@@ -22,7 +22,6 @@ public class AppInfoAdapter extends BaseQuickAdapter<AppInfo, BaseViewHolder> {
 
     private AppInfoAdapter(Builder builder) {
         super(builder.layoutId);
-
         this.mBuilder = builder;
         openLoadAnimation();
     }
@@ -39,8 +38,8 @@ public class AppInfoAdapter extends BaseQuickAdapter<AppInfo, BaseViewHolder> {
     @Override
     protected void convert(BaseViewHolder helper, AppInfo item) {
         ImageLoader.load(baseImgUrl + item.getIcon(), (ImageView) helper.getView(R.id.img_app_icon));
-        helper.setText(R.id.txt_app_name, item.getDisplayName())
-                .setText(R.id.txt_brief, item.getBriefShow());
+        helper.setText(R.id.txt_app_name, item.getDisplayName());
+//                .setText(R.id.txt_brief, item.getBriefShow());
 
         TextView txtViewPosition = helper.getView(R.id.txt_position);
         if (txtViewPosition != null) {
