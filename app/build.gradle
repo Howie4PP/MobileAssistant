@@ -84,4 +84,5 @@ dependencies {
 
     //view_behavior
     compile 'com.zoonref:simple-view-behavior:1.0'
+    compile project(path: ':rxdownload2')
 }

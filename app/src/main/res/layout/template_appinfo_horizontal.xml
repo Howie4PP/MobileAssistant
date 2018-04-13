@@ -51,14 +51,13 @@
                 android:text="微信"
                 android:textSize="18dp" />
 
-            <ImageView
+            <com.example.shenhaichen.mobileassistant.ui.widget.DownloadStateButton
                 android:id="@+id/btn_download"
-                android:layout_width="@dimen/dp_40"
-                android:layout_height="@dimen/dp_40"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="5dp"
                 android:layout_centerVertical="true"
-                android:src="@drawable/download"
+                android:text="@string/download"
                 />
         </RelativeLayout>
 

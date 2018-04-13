@@ -9,6 +9,8 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.example.shenhaichen.mobileassistant.R;
 import com.example.shenhaichen.mobileassistant.bean.AppInfo;
 import com.example.shenhaichen.mobileassistant.common.imageloader.ImageLoader;
+import com.example.shenhaichen.mobileassistant.ui.widget.DownLoadButtonController;
+import com.example.shenhaichen.mobileassistant.ui.widget.DownloadStateButton;
 
 /**
  * Created by shenhaichen on 22/03/2018.
@@ -63,6 +65,9 @@ public class AppInfoAdapter extends BaseQuickAdapter<AppInfo, BaseViewHolder> {
         if (textViewSize != null){
             textViewSize.setText((item.getApkSize() / 1014 / 1024) + "MB");
         }
+
+        DownloadStateButton btn = helper.getView(R.id.btn_download);
+        DownLoadButtonController.handClick(btn,item);
     }
 
     public static class Builder {

@@ -23,7 +23,7 @@ import retrofit2.http.Query;
  */
 public interface ApiService {
 
-    String BASE_URL = "xxxxxxxxxxxxx";
+    String BASE_URL = "http://112.124.22.238:8081/course_api/cniaoplay/";
 
     //retrofit与RxJava整合后的写法
     @GET("featured2")
