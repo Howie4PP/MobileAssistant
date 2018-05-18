@@ -59,6 +59,8 @@
     <string name="information">详细信息</string>
     <string name="developer">开发者</string>
     <string name="author">Howie_chen</string>
+    <string name="install">安装</string>
+    <string name="failed">失败</string>
 
 
 </resources>

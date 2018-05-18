@@ -12,6 +12,8 @@ import com.example.shenhaichen.mobileassistant.common.imageloader.ImageLoader;
 import com.example.shenhaichen.mobileassistant.ui.widget.DownLoadButtonController;
 import com.example.shenhaichen.mobileassistant.ui.widget.DownloadStateButton;
 
+import zlc.season.rxdownload2.RxDownload;
+
 /**
  * Created by shenhaichen on 22/03/2018.
  */
@@ -22,10 +24,14 @@ public class AppInfoAdapter extends BaseQuickAdapter<AppInfo, BaseViewHolder> {
 
     private Builder mBuilder;
 
+    private DownLoadButtonController mController;
+
     private AppInfoAdapter(Builder builder) {
         super(builder.layoutId);
         this.mBuilder = builder;
         openLoadAnimation();
+
+        mController = new DownLoadButtonController(builder.mRxDownload);
     }
 
     /**
@@ -66,14 +72,23 @@ public class AppInfoAdapter extends BaseQuickAdapter<AppInfo, BaseViewHolder> {
             textViewSize.setText((item.getApkSize() / 1014 / 1024) + "MB");
         }
 
+        //在使用之前，先判断是否有按钮实例
+//        View viewBtn = helper.getView(R.id.btn_download);
+
+//        if (viewBtn instanceof Downl)
+        helper.addOnClickListener(R.id.btn_download);
+
         DownloadStateButton btn = helper.getView(R.id.btn_download);
-        DownLoadButtonController.handClick(btn,item);
+        mController.handClick(btn,item);
     }
 
     public static class Builder {
         private boolean isShowPosition;
         private boolean isShowCategoryName;
         private boolean isShowBrief;
+
+        private RxDownload mRxDownload;
+
         //默认的布局
         private int layoutId = R.layout.template_appinfo_horizontal;
 
@@ -89,6 +104,11 @@ public class AppInfoAdapter extends BaseQuickAdapter<AppInfo, BaseViewHolder> {
 
         public Builder showBrief(boolean isShow) {
             this.isShowBrief = isShow;
+            return this;
+        }
+
+        public Builder rxDownload(RxDownload rxDownload){
+            this.mRxDownload = rxDownload;
             return this;
         }
 

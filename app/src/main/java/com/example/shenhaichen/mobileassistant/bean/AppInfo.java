@@ -58,6 +58,15 @@ public class AppInfo implements Serializable{
     private int diffFileSize;
     private List<AppInfo> sameDevAppInfoList;
     private String categoryId;
+    private AppDownloadInfo mAppDownloadInfo;
+
+    public AppDownloadInfo getAppDownloadInfo() {
+        return mAppDownloadInfo;
+    }
+
+    public void setAppDownloadInfo(AppDownloadInfo appDownloadInfo) {
+        mAppDownloadInfo = appDownloadInfo;
+    }
 
     public int getAddTime() {
         return addTime;

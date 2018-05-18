@@ -15,7 +15,7 @@ public class RankingFragment extends BaseAppInfoFragment{
     @Override
     AppInfoAdapter buildAdapter() {
         return AppInfoAdapter.builder().showPosition(true).showBrief(false)
-                .showCategoryName(true).build();
+                .showCategoryName(true).rxDownload(mRxDownload).build();
     }
     @Override
     int getType() {

@@ -2,7 +2,6 @@ package com.example.shenhaichen.mobileassistant.dagger.module;
 
 import android.app.Application;
 
-import com.example.shenhaichen.mobileassistant.BuildConfig;
 import com.example.shenhaichen.mobileassistant.common.http.CommonParamsInterceptor;
 import com.example.shenhaichen.mobileassistant.common.rx.RxErrorHandler;
 import com.example.shenhaichen.mobileassistant.data.network.ApiService;
@@ -15,7 +14,6 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -33,14 +31,14 @@ public class HttpModule {
     public OkHttpClient provideOkHttpClient(Application application, Gson gson) {
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
-
-        if (BuildConfig.DEBUG){
-            //log 拦截器
-            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-            //开发模式记录整个body，否则只记录基本信息如返回200， http协议版本等
-            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-            builder.addInterceptor(logging);
-        }
+//          在每次请求的时候，都会去记录一个日志，如果不注释，会导致内存溢出
+//        if (BuildConfig.DEBUG){
+//            //log 拦截器
+//            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+//            //开发模式记录整个body，否则只记录基本信息如返回200， http协议版本等
+//            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+//            builder.addInterceptor(logging);
+//        }
 
         return builder
                 //HeadInterceptor实现了Interceptor,用来往 Request header添加一些业务数据，如App版本，token信息

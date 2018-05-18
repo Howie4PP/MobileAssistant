@@ -18,7 +18,10 @@ import com.example.shenhaichen.mobileassistant.ui.activity.AppDetailActivity;
 import com.example.shenhaichen.mobileassistant.ui.adapter.AppInfoAdapter;
 import com.example.shenhaichen.mobileassistant.ui.decoration.DividerItemDecoration;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
+import zlc.season.rxdownload2.RxDownload;
 
 /**
  * 排行和游戏fragment的父类，因为两个fragment的大致结构相同
@@ -31,6 +34,9 @@ public abstract class BaseAppInfoFragment extends ProgressFragment<AppInfoPresen
 
     @BindView(R.id.recycle_view)
     RecyclerView mRecyclerView;
+
+    @Inject
+    RxDownload mRxDownload;
 
     protected AppInfoAdapter mAdapter;
 
