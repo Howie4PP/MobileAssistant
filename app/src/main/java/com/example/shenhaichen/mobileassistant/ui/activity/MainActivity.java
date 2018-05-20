@@ -25,10 +25,18 @@ import com.example.shenhaichen.mobileassistant.common.imageloader.GlideCircleTra
 import com.example.shenhaichen.mobileassistant.common.util.ACache;
 import com.example.shenhaichen.mobileassistant.dagger.component.AppComponent;
 import com.example.shenhaichen.mobileassistant.ui.adapter.ViewPagerAdapter;
+import com.example.shenhaichen.mobileassistant.ui.bean.FragmentInfo;
+import com.example.shenhaichen.mobileassistant.ui.fragment.CategoryFragment;
+import com.example.shenhaichen.mobileassistant.ui.fragment.GamesFragment;
+import com.example.shenhaichen.mobileassistant.ui.fragment.RankingFragment;
+import com.example.shenhaichen.mobileassistant.ui.fragment.RecommendFragment;
 import com.hwangjr.rxbus.RxBus;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.ionicons_typeface_library.Ionicons;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 
@@ -72,7 +80,7 @@ public class MainActivity extends BaseActivity implements
     private void initTabLayout() {
 
 
-        PagerAdapter mPageAdapter = new ViewPagerAdapter(getSupportFragmentManager(), this);
+        PagerAdapter mPageAdapter = new ViewPagerAdapter(getSupportFragmentManager(), initFragments());
         mViewPager.setAdapter(mPageAdapter);
 
         LinearLayout mLinearLayout = (LinearLayout) mTabLayout.getChildAt(0);
@@ -163,6 +171,22 @@ public class MainActivity extends BaseActivity implements
             User user = (User) objectUser;
             initUserHeaderView(user);
         }
+    }
+
+
+    private List<FragmentInfo> initFragments(){
+
+        List<FragmentInfo> mFragments = new ArrayList<>(4);
+
+        mFragments.add(new FragmentInfo("推荐",RecommendFragment.class));
+        mFragments.add(new FragmentInfo ("排行", RankingFragment.class));
+
+
+        mFragments.add(new FragmentInfo ("游戏", GamesFragment.class));
+        mFragments.add(new FragmentInfo ("分类", CategoryFragment.class));
+
+        return  mFragments;
+
     }
 
     /**

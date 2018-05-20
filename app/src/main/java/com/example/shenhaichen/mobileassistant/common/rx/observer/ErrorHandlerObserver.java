@@ -13,7 +13,7 @@ import com.example.shenhaichen.mobileassistant.ui.activity.LoginActivity;
  * Created by shenhaichen on 06/01/2018.
  */
 
-public abstract class ErrorHandlerObserver<T> extends BaseObserver<T> {
+public abstract class ErrorHandlerObserver<T> extends DefualtObserver<T> {
     protected RxErrorHandler mErrorHandler = null;
 
     protected Context mContext;
@@ -25,6 +25,8 @@ public abstract class ErrorHandlerObserver<T> extends BaseObserver<T> {
         mErrorHandler = new RxErrorHandler(context);
 
     }
+
+
 
     @Override
     public void onError(Throwable e) {

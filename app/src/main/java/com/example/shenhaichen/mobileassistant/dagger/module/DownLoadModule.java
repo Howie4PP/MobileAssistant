@@ -3,6 +3,9 @@ package com.example.shenhaichen.mobileassistant.dagger.module;
 import android.app.Application;
 import android.os.Environment;
 
+import com.example.shenhaichen.mobileassistant.common.Constant;
+import com.example.shenhaichen.mobileassistant.common.util.ACache;
+
 import java.io.File;
 
 import javax.inject.Singleton;
@@ -23,6 +26,8 @@ public class DownLoadModule {
     @Provides
     @Singleton
     public RxDownload provideRxDownLoad(Application application, Retrofit retrofit, File downloadDir){
+
+        ACache.get(application).put(Constant.APK_DOWNLOAD_DIR, downloadDir.getPath());
 
         return RxDownload.getInstance(application)
                 .retrofit(retrofit)

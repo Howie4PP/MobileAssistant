@@ -84,4 +84,13 @@
         <item name="android:textSize">12sp</item>
     </style>
 
+    <style name="AppTheme.ToolBar" parent="AppTheme">
+
+        <!-- 箭头 -->
+        <item name="drawerArrowStyle">@style/AppTheme.DrawerArrowToggle</item>
+        <item name="android:windowActionBarOverlay">@style/ActionButton.Overflow</item>
+        <item name="actionOverflowButtonStyle">@style/ActionButton.Overflow</item>
+        <item name="titleTextColor">@android:color/white</item>
+    </style>
+
 </resources>

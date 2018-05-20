@@ -1,18 +1,11 @@
 package com.example.shenhaichen.mobileassistant.ui.adapter;
 
-import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.example.shenhaichen.mobileassistant.R;
 import com.example.shenhaichen.mobileassistant.ui.bean.FragmentInfo;
-import com.example.shenhaichen.mobileassistant.ui.fragment.CategoryFragment;
-import com.example.shenhaichen.mobileassistant.ui.fragment.GamesFragment;
-import com.example.shenhaichen.mobileassistant.ui.fragment.RankingFragment;
-import com.example.shenhaichen.mobileassistant.ui.fragment.RecommendFragment;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,22 +14,14 @@ import java.util.List;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
-    private List<FragmentInfo> mFragments = new ArrayList<>(4);
-    private Context context;
+    private List<FragmentInfo> mFragments;
 
-    public ViewPagerAdapter(FragmentManager fm, Context context) {
+    public ViewPagerAdapter(FragmentManager fm, List<FragmentInfo> fragments) {
         super(fm);
-        this.context = context;
-        initFragment();
+//        initFragment();
+        mFragments = fragments;
     }
 
-    private void initFragment() {
-
-        mFragments.add(new FragmentInfo(context.getString(R.string.recommend), RecommendFragment.class));
-        mFragments.add(new FragmentInfo(context.getString(R.string.ranking), RankingFragment.class));
-        mFragments.add(new FragmentInfo(context.getString(R.string.game), GamesFragment.class));
-        mFragments.add(new FragmentInfo(context.getString(R.string.category), CategoryFragment.class));
-    }
 
     @Override
     public Fragment getItem(int position) {

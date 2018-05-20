@@ -8,9 +8,12 @@ import com.example.shenhaichen.mobileassistant.R;
 import com.example.shenhaichen.mobileassistant.bean.AppDownloadInfo;
 import com.example.shenhaichen.mobileassistant.bean.AppInfo;
 import com.example.shenhaichen.mobileassistant.bean.BaseBean;
+import com.example.shenhaichen.mobileassistant.common.Constant;
 import com.example.shenhaichen.mobileassistant.common.rx.RxHttpResponseCompat;
 import com.example.shenhaichen.mobileassistant.common.rx.RxSchedulers;
+import com.example.shenhaichen.mobileassistant.common.util.ACache;
 import com.example.shenhaichen.mobileassistant.common.util.AppUtils;
+import com.example.shenhaichen.mobileassistant.common.util.PermissionUtil;
 import com.jakewharton.rxbinding2.view.RxView;
 
 import java.io.File;
@@ -22,8 +25,12 @@ import io.reactivex.functions.Function;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import zlc.season.rxdownload2.RxDownload;
+import zlc.season.rxdownload2.entity.DownloadBean;
 import zlc.season.rxdownload2.entity.DownloadEvent;
 import zlc.season.rxdownload2.entity.DownloadFlag;
+import zlc.season.rxdownload2.entity.DownloadRecord;
+
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 
 /**
@@ -31,7 +38,7 @@ import zlc.season.rxdownload2.entity.DownloadFlag;
  */
 public class DownLoadButtonController {
 
-    private String mDownloadedDir = null; //文件的下载目录
+    //    private String mDownloadedDir = null; //文件的下载目录
     private RxDownload mRxDownload;
     private String filePath = null;
     private Api mApi;
@@ -39,9 +46,14 @@ public class DownLoadButtonController {
 
     public DownLoadButtonController(RxDownload rxDownload) {
         mRxDownload = rxDownload;
-        if (mRxDownload != null){
+        if (mRxDownload != null) {
             mApi = mRxDownload.getRetrofit().create(Api.class);
         }
+    }
+
+    public void handClick(final DownloadStateButton btn, final String url) {
+
+
     }
 
     /**
@@ -52,7 +64,7 @@ public class DownLoadButtonController {
     @SuppressLint("CheckResult")
     public void handClick(final DownloadStateButton btn, final AppInfo appInfo) {
 
-        if(mApi == null) return;
+        if (mApi == null) return;
 
         bindClick(btn, appInfo);
 
@@ -62,7 +74,7 @@ public class DownLoadButtonController {
                     public ObservableSource<DownloadEvent> apply(DownloadEvent downloadEvent) throws Exception {
                         if (DownloadFlag.UN_INSTALL == downloadEvent.getFlag()) {
 
-                            return isApkFileExist(appInfo);
+                            return isApkFileExist(btn.getContext(), appInfo);
 
                         }
                         return Observable.just(downloadEvent);
@@ -79,7 +91,7 @@ public class DownLoadButtonController {
                                         public ObservableSource<DownloadEvent> apply(@NonNull AppDownloadInfo appDownloadInfo) throws Exception {
 
                                             appInfo.setAppDownloadInfo(appDownloadInfo);
-                                            return receiveDownloadStatus(appDownloadInfo);
+                                            return receiveDownloadStatus(appDownloadInfo.getDownloadUrl());
                                         }
                                     });
 
@@ -105,16 +117,16 @@ public class DownLoadButtonController {
                 int flag = (int) btn.getTag(R.id.tag_apk_flag);
                 switch (flag) {
                     case DownloadFlag.INSTALLED:
-                        runApp(btn.getContext(), appInfo);
+                        runApp(btn.getContext(), appInfo.getPackageName());
                         break;
                     case DownloadFlag.STARTED:
-                        pausedDownload(appInfo);
+                        pausedDownload(appInfo.getAppDownloadInfo().getDownloadUrl());
                         break;
                     case DownloadFlag.PAUSED:
                         startDownLoad(btn, appInfo);
                         break;
                     case DownloadFlag.NORMAL:
-                        startDownLoad(btn,appInfo);
+                        startDownLoad(btn, appInfo);
                         break;
                     case DownloadFlag.COMPLETED:
                         installApp(btn.getContext(), appInfo);
@@ -126,7 +138,11 @@ public class DownLoadButtonController {
     }
 
     private void installApp(Context context, AppInfo appInfo) {
-        AppUtils.installApk(context, filePath);
+
+        String path = ACache.get(context).getAsString(Constant.APK_DOWNLOAD_DIR)
+                + File.separator + appInfo.getReleaseKeyHash();
+
+        AppUtils.installApk(context, path);
     }
 
     /**
@@ -135,44 +151,53 @@ public class DownLoadButtonController {
      * @param appInfo
      */
     @SuppressLint("CheckResult")
-    private void startDownLoad(DownloadStateButton btn, final AppInfo appInfo) {
+    private void startDownLoad(final DownloadStateButton btn, final AppInfo appInfo) {
 
         //TODO 这里需要一个权限判断
+        PermissionUtil.requestPermisson(btn.getContext(), WRITE_EXTERNAL_STORAGE)
+                .subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean aBoolean) throws Exception {
+                        if (aBoolean) {
+                            final AppDownloadInfo downloadInfo = appInfo.getAppDownloadInfo();
+                            if (downloadInfo == null) {
 
-        AppDownloadInfo mDownLoadInfo = appInfo.getAppDownloadInfo();
-        // 在开始下载的时候，如果没有得到程序的数据对象，则需要先获取
-        if (mDownLoadInfo == null) {
-            getAppDownloadInfo(appInfo).subscribe(new Consumer<AppDownloadInfo>() {
-                @Override
-                public void accept(AppDownloadInfo appDownloadInfo) throws Exception {
-                    appInfo.setAppDownloadInfo(appDownloadInfo);
-                    //数据订阅（subscribe）之后，才会发送并被获取
-                    mRxDownload.serviceDownload(appDownloadInfo.getDownloadUrl()).subscribe();
+                                getAppDownloadInfo(appInfo).subscribe(new Consumer<AppDownloadInfo>() {
+                                    @Override
+                                    public void accept(@NonNull AppDownloadInfo appDownloadInfo) throws Exception {
 
-                }
-            });
-        } else {
-            //数据订阅（subscribe）之后，才会发送并被获取
-            downLoad(btn, appInfo);
-        }
+                                        appInfo.setAppDownloadInfo(appDownloadInfo);
+
+                                        downLoad(btn, appInfo);
+
+                                    }
+                                });
+                            } else {
+
+                                downLoad(btn, appInfo);
+                            }
+                        }
+                    }
+                });
+
     }
 
     @SuppressLint("CheckResult")
     private void downLoad(DownloadStateButton btn, AppInfo info) {
-        mRxDownload.serviceDownload(info.getAppDownloadInfo().getDownloadUrl()).subscribe();
+        mRxDownload.serviceDownload(appInfo2DownloadBean(info)).subscribe();
         mRxDownload.receiveDownloadStatus(info.getAppDownloadInfo().getDownloadUrl())
                 .subscribe(new DownLoadConsumer(btn, info, btn.getContext()));
     }
 
 
     /**
-     * 暂停下载
      *
-     * @param appInfo
+     * 需要订阅，暂停下载
+     *
      */
-    private void pausedDownload(AppInfo appInfo) {
-        AppDownloadInfo downloadInfo = appInfo.getAppDownloadInfo();
-        mRxDownload.pauseServiceDownload(downloadInfo.getDownloadUrl());
+    private void pausedDownload(String appDownloadInfo) {
+//        AppDownloadInfo downloadInfo = appDownloadInfo;
+        mRxDownload.pauseServiceDownload(appDownloadInfo).subscribe();
     }
 
     /**
@@ -181,7 +206,8 @@ public class DownLoadButtonController {
      * @param context
      * @param appInfo
      */
-    private void runApp(Context context, AppInfo appInfo) {
+    private void runApp(Context context, String appInfo) {
+        AppUtils.runApp(context,appInfo);
     }
 
 
@@ -196,9 +222,9 @@ public class DownLoadButtonController {
     }
 
 
-    public Observable<DownloadEvent> isApkFileExist(AppInfo appInfo) {
+    public Observable<DownloadEvent> isApkFileExist(Context context, AppInfo appInfo) {
 
-        filePath = mDownloadedDir + File.separator + appInfo.getReleaseKeyHash();
+        filePath = ACache.get(context).getAsString(Constant.APK_DOWNLOAD_DIR) + File.separator + appInfo.getReleaseKeyHash();
         File file = new File(filePath);
 
         DownloadEvent event = new DownloadEvent();
@@ -210,16 +236,16 @@ public class DownLoadButtonController {
     }
 
 
-    public Observable<DownloadEvent> receiveDownloadStatus(AppDownloadInfo appInfo) {
+    public Observable<DownloadEvent> receiveDownloadStatus(String url){
 
-        return mRxDownload.receiveDownloadStatus(appInfo.getDownloadUrl());
+        return  mRxDownload.receiveDownloadStatus(url);
     }
 
 
     public Observable<AppDownloadInfo> getAppDownloadInfo(AppInfo appInfo) {
 
         return mApi.getAppDownloadInfo(appInfo.getId()).compose(RxHttpResponseCompat
-        .<AppDownloadInfo>compatResult());
+                .<AppDownloadInfo>compatResult());
     }
 
     class DownLoadConsumer implements Consumer<DownloadEvent> {
@@ -239,7 +265,7 @@ public class DownLoadButtonController {
             int flag = downloadEvent.getFlag();
 
             btn.setTag(R.id.tag_apk_flag, flag);
-
+            //回调以后，进行绑定
             bindClick(btn, mInfo);
 
             switch (flag) {
@@ -276,4 +302,42 @@ public class DownLoadButtonController {
         Observable<BaseBean<AppDownloadInfo>> getAppDownloadInfo(@Path("id") int id);
     }
 
+    public AppInfo downloadRecord2AppInfo(DownloadRecord bean){
+
+
+        AppInfo info = new AppInfo();
+
+        info.setId(Integer.parseInt(bean.getExtra1()));
+        info.setIcon(bean.getExtra2());
+        info.setDisplayName(bean.getExtra3());
+        info.setPackageName(bean.getExtra4());
+        info.setReleaseKeyHash(bean.getExtra5());
+
+
+        AppDownloadInfo downloadInfo = new AppDownloadInfo();
+
+        downloadInfo.setDowanloadUrl(bean.getUrl());
+
+        info.setAppDownloadInfo(downloadInfo);
+
+        return info;
+
+
+
+    }
+
+    private DownloadBean appInfo2DownloadBean(AppInfo info){
+
+        DownloadBean downloadBean = new DownloadBean();
+
+        downloadBean.setUrl(info.getAppDownloadInfo().getDownloadUrl());
+        downloadBean.setSaveName(info.getReleaseKeyHash() +".apk");
+        downloadBean.setExtra1(info.getId()+"");
+        downloadBean.setExtra2(info.getIcon());
+        downloadBean.setExtra3(info.getDisplayName());
+        downloadBean.setExtra4(info.getPackageName());
+        downloadBean.setExtra5(info.getReleaseKeyHash());
+
+        return  downloadBean;
+    }
 }
