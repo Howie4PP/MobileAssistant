@@ -67,7 +67,15 @@ public class AppManagerPresenter extends BasePresenter<AppManagerContract.IAppMa
         return mModel.getRxDownload();
     }
 
-
+    public void getInstalledApp(){
+        mModel.getInstalledApks().compose(RxSchedulers.<List<AndroidApk>> io_main())
+                .subscribe(new ProgressObserver<List<AndroidApk>>(mContext,mView) {
+                    @Override
+                    public void onNext(List<AndroidApk> androidApks) {
+                        mView.showApps(androidApks);
+                    }
+                });
+    }
 
     private List<DownloadRecord> downloadRecordFilter(List<DownloadRecord> downloadRecords){
 

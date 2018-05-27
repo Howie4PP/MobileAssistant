@@ -13,6 +13,7 @@ import com.example.shenhaichen.mobileassistant.common.rx.RxHttpResponseCompat;
 import com.example.shenhaichen.mobileassistant.common.rx.RxSchedulers;
 import com.example.shenhaichen.mobileassistant.common.util.ACache;
 import com.example.shenhaichen.mobileassistant.common.util.AppUtils;
+import com.example.shenhaichen.mobileassistant.common.util.PackageUtils;
 import com.example.shenhaichen.mobileassistant.common.util.PermissionUtil;
 import com.jakewharton.rxbinding2.view.RxView;
 
@@ -142,7 +143,8 @@ public class DownLoadButtonController {
         String path = ACache.get(context).getAsString(Constant.APK_DOWNLOAD_DIR)
                 + File.separator + appInfo.getReleaseKeyHash();
 
-        AppUtils.installApk(context, path);
+//        AppUtils.installApk(context, path);
+        PackageUtils.install(context,path);
     }
 
     /**

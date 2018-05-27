@@ -11,7 +11,9 @@ import com.example.shenhaichen.mobileassistant.R;
 import com.example.shenhaichen.mobileassistant.dagger.component.AppComponent;
 import com.example.shenhaichen.mobileassistant.ui.adapter.ViewPagerAdapter;
 import com.example.shenhaichen.mobileassistant.ui.bean.FragmentInfo;
+import com.example.shenhaichen.mobileassistant.ui.fragment.DownloadedFragment;
 import com.example.shenhaichen.mobileassistant.ui.fragment.DownloadingFragment;
+import com.example.shenhaichen.mobileassistant.ui.fragment.InstalledAppAppFragment;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.ionicons_typeface_library.Ionicons;
 
@@ -88,11 +90,9 @@ public class AppManageActivity extends BaseActivity {
         List<FragmentInfo> mFragments = new ArrayList<>(4);
 
         mFragments.add(new FragmentInfo("下载",DownloadingFragment.class));
-//        mFragments.add(new FragmentInfo ("排行", TopListFragment.class));
+        mFragments.add(new FragmentInfo("已完成",DownloadedFragment.class));
+        mFragments.add(new FragmentInfo("安装",InstalledAppAppFragment.class));
 
-//
-//        mFragments.add(new FragmentInfo ("游戏", GamesFragment.class));
-//        mFragments.add(new FragmentInfo ("分类", CategoryFragment.class));
 
         return  mFragments;
 

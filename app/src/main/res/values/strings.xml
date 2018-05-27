@@ -60,7 +60,8 @@
     <string name="developer">开发者</string>
     <string name="author">Howie_chen</string>
     <string name="install">安装</string>
+    <string name="smart_install">智能安装</string>
     <string name="failed">失败</string>
-
+    <string name="accessibility_service_description">智能安装，无需人工操作</string>
 
 </resources>

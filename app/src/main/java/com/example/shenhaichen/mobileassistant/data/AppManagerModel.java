@@ -5,6 +5,7 @@ import android.content.Context;
 import com.example.shenhaichen.mobileassistant.common.Constant;
 import com.example.shenhaichen.mobileassistant.common.apkparset.AndroidApk;
 import com.example.shenhaichen.mobileassistant.common.util.ACache;
+import com.example.shenhaichen.mobileassistant.common.util.AppUtils;
 import com.example.shenhaichen.mobileassistant.presenter.contract.AppManagerContract;
 
 import java.io.File;
@@ -66,6 +67,20 @@ public class AppManagerModel implements AppManagerContract.IAppManagerModel {
         });
     }
 
+    @Override
+    public Observable<List<AndroidApk>> getInstalledApks() {
+
+        return Observable.create(new ObservableOnSubscribe<List<AndroidApk>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<AndroidApk>> e) throws Exception {
+                e.onNext(AppUtils.getInstalledApps(mContext));
+
+                e.onComplete();
+            }
+        });
+
+    }
+
 
     private List<AndroidApk> scanApks(String dir) {
 
@@ -104,6 +119,7 @@ public class AppManagerModel implements AppManagerContract.IAppManagerModel {
         return androidApks;
 
     }
+
 
 
 }
