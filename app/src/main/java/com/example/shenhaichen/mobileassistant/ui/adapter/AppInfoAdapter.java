@@ -86,6 +86,7 @@ public class AppInfoAdapter extends BaseQuickAdapter<AppInfo, BaseViewHolder> {
         private boolean isShowPosition;
         private boolean isShowCategoryName;
         private boolean isShowBrief;
+        private boolean isUpdateStatus;
 
         private RxDownload mRxDownload;
 
@@ -123,6 +124,10 @@ public class AppInfoAdapter extends BaseQuickAdapter<AppInfo, BaseViewHolder> {
          */
         public Builder layout(int resId){
             this.layoutId = resId;
+            return this;
+        }
+        public Builder updateStatus(boolean b){
+            this.isUpdateStatus = b;
             return this;
         }
     }

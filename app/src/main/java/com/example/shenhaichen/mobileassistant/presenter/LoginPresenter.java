@@ -2,12 +2,12 @@ package com.example.shenhaichen.mobileassistant.presenter;
 
 import com.example.shenhaichen.mobileassistant.bean.LoginBean;
 import com.example.shenhaichen.mobileassistant.common.Constant;
+import com.example.shenhaichen.mobileassistant.common.rx.RxBus;
 import com.example.shenhaichen.mobileassistant.common.rx.RxHttpResponseCompat;
 import com.example.shenhaichen.mobileassistant.common.rx.observer.ErrorHandlerObserver;
 import com.example.shenhaichen.mobileassistant.common.util.ACache;
 import com.example.shenhaichen.mobileassistant.common.util.VerificationUtils;
 import com.example.shenhaichen.mobileassistant.presenter.contract.LoginContract;
-import com.hwangjr.rxbus.RxBus;
 
 import javax.inject.Inject;
 
@@ -53,7 +53,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.ILoginModel, Log
                         saveUserInfo(loginBean);
 
                         //RxBus 发送数据
-                        RxBus.get().post(loginBean.getUser());
+                        RxBus.getDefault().post(loginBean.getUser());
                     }
 
                     @Override

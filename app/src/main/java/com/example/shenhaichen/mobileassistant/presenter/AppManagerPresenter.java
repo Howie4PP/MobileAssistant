@@ -1,16 +1,24 @@
 package com.example.shenhaichen.mobileassistant.presenter;
 
 
+import android.text.TextUtils;
+
+import com.example.shenhaichen.mobileassistant.bean.AppInfo;
+import com.example.shenhaichen.mobileassistant.common.Constant;
 import com.example.shenhaichen.mobileassistant.common.apkparset.AndroidApk;
 import com.example.shenhaichen.mobileassistant.common.rx.RxSchedulers;
 import com.example.shenhaichen.mobileassistant.common.rx.observer.ProgressObserver;
+import com.example.shenhaichen.mobileassistant.common.util.ACache;
 import com.example.shenhaichen.mobileassistant.presenter.contract.AppManagerContract;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Observable;
 import zlc.season.rxdownload2.RxDownload;
 import zlc.season.rxdownload2.entity.DownloadFlag;
 import zlc.season.rxdownload2.entity.DownloadRecord;
@@ -75,6 +83,35 @@ public class AppManagerPresenter extends BasePresenter<AppManagerContract.IAppMa
                         mView.showApps(androidApks);
                     }
                 });
+    }
+
+    public void  getUpdateApps(){
+
+
+        String json =   ACache.get(mContext).getAsString(Constant.APP_UPDATE_LIST);
+
+
+        if(!TextUtils.isEmpty(json)){
+
+            Gson gson = new Gson();
+            List<AppInfo> apps = gson.fromJson(json,new TypeToken<List<AppInfo>>(){}.getType());
+
+
+            Observable.just(apps)
+                    .compose(RxSchedulers.<List<AppInfo>>io_main())
+
+                    .subscribe(new ProgressObserver<List<AppInfo>>(mContext,mView) {
+                        @Override
+                        public void onNext(List<AppInfo> appInfos) {
+
+                            mView.showUpdateApps(appInfos);
+                        }
+                    });
+
+
+        }
+
+
     }
 
     private List<DownloadRecord> downloadRecordFilter(List<DownloadRecord> downloadRecords){

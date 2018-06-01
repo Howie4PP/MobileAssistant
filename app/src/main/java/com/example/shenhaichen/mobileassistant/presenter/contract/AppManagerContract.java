@@ -1,6 +1,7 @@
 package com.example.shenhaichen.mobileassistant.presenter.contract;
 
 
+import com.example.shenhaichen.mobileassistant.bean.AppInfo;
 import com.example.shenhaichen.mobileassistant.common.apkparset.AndroidApk;
 import com.example.shenhaichen.mobileassistant.ui.BaseView;
 
@@ -23,7 +24,7 @@ public interface AppManagerContract {
 
         void showApps(List<AndroidApk> apps);
 
-
+        void showUpdateApps(List<AppInfo> appInfos);
     }
 
     interface IAppManagerModel {

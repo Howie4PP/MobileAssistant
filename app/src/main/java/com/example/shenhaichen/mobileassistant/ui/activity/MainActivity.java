@@ -1,20 +1,23 @@
 package com.example.shenhaichen.mobileassistant.ui.activity;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.shenhaichen.mobileassistant.R;
@@ -22,16 +25,21 @@ import com.example.shenhaichen.mobileassistant.bean.User;
 import com.example.shenhaichen.mobileassistant.common.Constant;
 import com.example.shenhaichen.mobileassistant.common.font.IFont;
 import com.example.shenhaichen.mobileassistant.common.imageloader.GlideCircleTransform;
+import com.example.shenhaichen.mobileassistant.common.rx.RxBus;
 import com.example.shenhaichen.mobileassistant.common.util.ACache;
 import com.example.shenhaichen.mobileassistant.dagger.component.AppComponent;
+import com.example.shenhaichen.mobileassistant.dagger.component.DaggerMainComponent;
+import com.example.shenhaichen.mobileassistant.dagger.module.MainModule;
+import com.example.shenhaichen.mobileassistant.presenter.MainPresenter;
+import com.example.shenhaichen.mobileassistant.presenter.contract.MainContract;
 import com.example.shenhaichen.mobileassistant.ui.adapter.ViewPagerAdapter;
 import com.example.shenhaichen.mobileassistant.ui.bean.FragmentInfo;
 import com.example.shenhaichen.mobileassistant.ui.fragment.CategoryFragment;
 import com.example.shenhaichen.mobileassistant.ui.fragment.GamesFragment;
 import com.example.shenhaichen.mobileassistant.ui.fragment.RankingFragment;
 import com.example.shenhaichen.mobileassistant.ui.fragment.RecommendFragment;
-import com.hwangjr.rxbus.RxBus;
-import com.hwangjr.rxbus.annotation.Subscribe;
+import com.example.shenhaichen.mobileassistant.ui.fragment.SettingFragment;
+import com.example.shenhaichen.mobileassistant.ui.widget.BadgeActionProvider;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.ionicons_typeface_library.Ionicons;
 
@@ -39,9 +47,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
 
-public class MainActivity extends BaseActivity implements
-        NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+public class MainActivity extends  BaseActivity<MainPresenter> implements MainContract.MainView  {
 
     @BindView(R.id.main_drawer_layout)
     DrawerLayout mDrawerLayout;
@@ -58,6 +67,8 @@ public class MainActivity extends BaseActivity implements
     private ImageView mUserHeadView;
     private TextView mTextUserName;
 
+    private  BadgeActionProvider badgeActionProvider;
+
     @Override
     public int setLayout() {
         return R.layout.activity_main;
@@ -66,77 +77,172 @@ public class MainActivity extends BaseActivity implements
     @Override
     public void setupActivityComponent(AppComponent appComponent) {
 
+        DaggerMainComponent.builder().appComponent(appComponent)
+                .mainModule(new MainModule(this))
+                .build()
+                .inject(this);
+
     }
 
     @Override
     public void init() {
-        RxBus.get().register(this);
-        initTabLayout();
-        initDrawerLayout();
-        initUser();
+        boolean key_smart_install= getSharedPreferences(getPackageName()+"_preferences",MODE_PRIVATE).getBoolean("key_smart_install",false);
+
+        Log.d("MainActivity","key_smart_install="+key_smart_install);
+
+        RxBus.getDefault().toObservable(User.class).subscribe(new Consumer<User>() {
+            @Override
+            public void accept(User user) throws Exception {
+
+                initUserHeadView(user);
+            }
+        });
+
+        mPresenter.requestPermission();
+
+        mPresenter.getAppUpdateInfo();
     }
 
+    private List<FragmentInfo>  initFragments(){
+
+        List<FragmentInfo> mFragments = new ArrayList<>(4);
+
+        mFragments.add(new FragmentInfo("推荐",RecommendFragment.class));
+        mFragments.add(new FragmentInfo ("排行", RankingFragment.class));
+
+
+        mFragments.add(new FragmentInfo ("游戏", GamesFragment.class));
+        mFragments.add(new FragmentInfo ("分类", CategoryFragment.class));
+
+        return  mFragments;
+
+    }
 
     private void initTabLayout() {
 
 
-        PagerAdapter mPageAdapter = new ViewPagerAdapter(getSupportFragmentManager(), initFragments());
-        mViewPager.setAdapter(mPageAdapter);
+        PagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager(),initFragments());
+        mViewPager.setOffscreenPageLimit(adapter.getCount());
+        mViewPager.setAdapter(adapter);
 
-        LinearLayout mLinearLayout = (LinearLayout) mTabLayout.getChildAt(0);
-        //在所有tab的中间显示分割线
-        mLinearLayout.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
-        //设置分割线的距离，LinearLayout的内距离
-        mLinearLayout.setDividerPadding(20);
-        //设置分割线的样式
-        mLinearLayout.setDividerDrawable(getDrawable(R.drawable.divider_vertical));
-        //设置分割颜色（颜色尽量和tab一样）
-        mLinearLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+
         mTabLayout.setupWithViewPager(mViewPager);
     }
 
     private void initDrawerLayout() {
+
+
         headerView = mNavigationView.getHeaderView(0);
 
-        //左滑界面登录头像和文字
-        mUserHeadView = headerView.findViewById(R.id.img_avatar);
-        mUserHeadView.setImageDrawable(new IconicsDrawable(this, IFont.Icon.cniao_head).colorRes(R.color.color_w));
-        mTextUserName = headerView.findViewById(R.id.txt_username);
+        mUserHeadView = (ImageView) headerView.findViewById(R.id.img_avatar);
+        mUserHeadView.setImageDrawable(new IconicsDrawable(this, IFont.Icon.cniao_head).colorRes(R.color.white));
+
+        mTextUserName = (TextView) headerView.findViewById(R.id.txt_username);
+
 
         mNavigationView.getMenu().findItem(R.id.menu_app_update).setIcon(new IconicsDrawable(this, Ionicons.Icon.ion_ios_loop));
         mNavigationView.getMenu().findItem(R.id.menu_download_manager).setIcon(new IconicsDrawable(this, IFont.Icon.cniao_download));
         mNavigationView.getMenu().findItem(R.id.menu_app_uninstall).setIcon(new IconicsDrawable(this, Ionicons.Icon.ion_ios_trash_outline));
         mNavigationView.getMenu().findItem(R.id.menu_setting).setIcon(new IconicsDrawable(this, Ionicons.Icon.ion_ios_gear_outline));
+
         mNavigationView.getMenu().findItem(R.id.menu_logout).setIcon(new IconicsDrawable(this, IFont.Icon.cniao_shutdown));
-        //设置navigation view的监听
-        mNavigationView.setNavigationItemSelectedListener(this);
-        //设置toolbar的menu
+
+        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+
+                switch (item.getItemId()) {
+
+                    case R.id.menu_logout:
+
+                        logout();
+
+                        break;
+                    case R.id.menu_download_manager:
+
+                        toAppManagerActivity(1);
+
+                        break;
+                    case R.id.menu_app_uninstall:
+
+                        toAppManagerActivity(3);
+
+                        break;
+                    case R.id.menu_app_update:
+
+                        toAppManagerActivity(2);
+
+                        break;
+
+                    case R.id.menu_setting:
+
+                        startActivity(new Intent(MainActivity.this,SettingFragment.class));
+
+                        break;
+
+
+
+                }
+
+
+                return false;
+            }
+        });
+
+
+
+
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.open, R.string.close);
+
+        drawerToggle.syncState();
+
+        mDrawerLayout.addDrawerListener(drawerToggle);
+
+
+    }
+
+    private void initToolbar(){
+
         mToolbar.inflateMenu(R.menu.menu_toolbar);
-        //联合toolbar 和 drawerLayout
-        ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this,
-                mDrawerLayout, mToolbar, R.string.open, R.string.close);
-        //同步两个控件
-        mDrawerToggle.syncState();
-        mDrawerLayout.addDrawerListener(mDrawerToggle);
+
+        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                if(item.getItemId() == R.id.action_search){
+
+                    startActivity(new Intent(MainActivity.this,SearchActivity.class));
+                }
+
+                return true;
+            }
+        });
+
+
+        MenuItem downloadMenuItem = mToolbar.getMenu().findItem(R.id.action_download);
+
+
+        badgeActionProvider = (BadgeActionProvider) MenuItemCompat.getActionProvider(downloadMenuItem);
+
+        badgeActionProvider.setIcon(DrawableCompat.wrap(new IconicsDrawable(this, IFont.Icon.cniao_download).color(ContextCompat.getColor(this,R.color.white))));
+
+        badgeActionProvider.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                toAppManagerActivity(badgeActionProvider.getBadgeNum()>0?2:0);
+            }
+        });
+
     }
 
-    /**
-     * Navigation view的监听
-     *
-     * @param item
-     * @return
-     */
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+    private void initUserHeadView(User user){
 
-        switch (item.getItemId()) {
-            case R.id.menu_logout:
-                logout();
-                break;
-        }
-        return false;
+        Glide.with(this).load(user.getLogo_url()).transform(new GlideCircleTransform(this)).into(mUserHeadView);
+
+        mTextUserName.setText(user.getUsername());
     }
-
     /**
      * 退出登录
      */
@@ -156,7 +262,6 @@ public class MainActivity extends BaseActivity implements
      *
      * @param user
      */
-    @Subscribe
     public void getUserInfo(User user) {
 //        ImageLoader.load(user.getLogo_url(), mUserHeadView);
         initUserHeaderView(user);
@@ -164,30 +269,25 @@ public class MainActivity extends BaseActivity implements
 
     private void initUser() {
         Object objectUser = ACache.get(this).getAsObject(Constant.USER);
-        if (objectUser == null) {
-            //点击头像跳转到登录页面，进行登录
-            headerView.setOnClickListener(this);
-        } else {
+        if(objectUser ==null){
+
+            headerView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(MainActivity.this,LoginActivity.class));
+                }
+            });
+
+        }
+        else{
+
             User user = (User) objectUser;
-            initUserHeaderView(user);
+            initUserHeadView(user);
+
         }
     }
 
 
-    private List<FragmentInfo> initFragments(){
-
-        List<FragmentInfo> mFragments = new ArrayList<>(4);
-
-        mFragments.add(new FragmentInfo("推荐",RecommendFragment.class));
-        mFragments.add(new FragmentInfo ("排行", RankingFragment.class));
-
-
-        mFragments.add(new FragmentInfo ("游戏", GamesFragment.class));
-        mFragments.add(new FragmentInfo ("分类", CategoryFragment.class));
-
-        return  mFragments;
-
-    }
 
     /**
      * 在得到数据后，把头像和名称加载进控件当中
@@ -203,11 +303,56 @@ public class MainActivity extends BaseActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        RxBus.get().unregister(this);
+//        RxBus.get().unregister(this);
+    }
+
+    private void toAppManagerActivity(int position){
+
+        Intent intent = new Intent(MainActivity.this,AppManageActivity.class);
+
+        intent.putExtra(Constant.POSITION,position);
+
+        startActivity(new Intent(intent));
+
     }
 
     @Override
-    public void onClick(View v) {
-        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+    public void requestPermissionSuccess() {
+        initToolbar();
+        initDrawerLayout();
+        initTabLayout();
+        initUser();
+    }
+
+    @Override
+    public void requestPermissionFail() {
+        Toast.makeText(MainActivity.this,"授权失败....",Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void changeAppNeedUpdateCount(int count) {
+        if(count>0){
+
+            badgeActionProvider.setText(count+"");
+        }
+        else{
+
+            badgeActionProvider.hideBadge();
+        }
+    }
+
+    @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void disMissLoading() {
+
+    }
+
+    @Override
+    public void showError(String mes) {
+
     }
 }

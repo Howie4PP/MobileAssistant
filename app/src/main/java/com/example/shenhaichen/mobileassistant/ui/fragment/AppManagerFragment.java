@@ -4,6 +4,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.example.shenhaichen.mobileassistant.R;
+import com.example.shenhaichen.mobileassistant.bean.AppInfo;
 import com.example.shenhaichen.mobileassistant.common.apkparset.AndroidApk;
 import com.example.shenhaichen.mobileassistant.presenter.AppManagerPresenter;
 import com.example.shenhaichen.mobileassistant.presenter.contract.AppManagerContract;
@@ -59,6 +60,11 @@ public abstract class AppManagerFragment extends ProgressFragment<AppManagerPres
 
     @Override
     public void showDownloading(List<DownloadRecord> downloadRecords) {
+
+    }
+
+    @Override
+    public void showUpdateApps(List<AppInfo> appInfos) {
 
     }
 

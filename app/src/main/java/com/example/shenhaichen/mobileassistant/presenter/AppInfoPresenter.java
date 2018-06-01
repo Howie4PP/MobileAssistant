@@ -28,6 +28,7 @@ public class AppInfoPresenter extends BasePresenter<AppInfoModel, AppInfoContrac
     public static final int FEATURED = 0;
     public static final int TOPLIST = 1;
     public static final int LATEST = 2;
+    public static final int HOT_APP_LIST=3;
 
     @Inject
     public AppInfoPresenter(AppInfoModel appInfoModel, AppInfoContract.AppInfoView rankingView) {

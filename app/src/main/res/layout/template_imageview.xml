@@ -5,6 +5,7 @@
     android:layout_marginRight="@dimen/dp_2"
     android:adjustViewBounds="true"
     android:maxWidth="@dimen/dp_150"
+    android:id="@+id/imageview"
     android:scaleType="centerCrop">
 
 </ImageView>

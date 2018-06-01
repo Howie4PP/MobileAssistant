@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.example.shenhaichen.mobileassistant.R;
+import com.example.shenhaichen.mobileassistant.common.Constant;
 import com.example.shenhaichen.mobileassistant.dagger.component.AppComponent;
 import com.example.shenhaichen.mobileassistant.ui.adapter.ViewPagerAdapter;
 import com.example.shenhaichen.mobileassistant.ui.bean.FragmentInfo;
@@ -31,6 +32,8 @@ public class AppManageActivity extends BaseActivity {
     @BindView(R.id.viewpager)
     ViewPager mViewpager;
 
+    private  int position;
+
     @Override
     public int setLayout() {
         return R.layout.activity_download_manager;
@@ -40,33 +43,9 @@ public class AppManageActivity extends BaseActivity {
     public void setupActivityComponent(AppComponent appComponent) {
 
     }
-
-    @Override
-    public void init() {
-        initToolbar();
-        initTablayout();
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
-    }
-
-    private void initTablayout() {
-
-        PagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager(),initFragments());
-        mViewpager.setOffscreenPageLimit(adapter.getCount());
-        mViewpager.setAdapter(adapter);
-
-        mTabs.setupWithViewPager(mViewpager);
-
-
-    }
-
     private void initToolbar() {
-        //设置导航图标
+
+
         mToolbar.setNavigationIcon(
                 new IconicsDrawable(this)
                         .icon(Ionicons.Icon.ion_ios_arrow_back)
@@ -82,8 +61,40 @@ public class AppManageActivity extends BaseActivity {
             }
         });
 
-        mToolbar.setTitle(R.string.download_manager);
+        mToolbar.setTitle(R.string.manage);
     }
+
+    @Override
+    public void init() {
+        position = getIntent().getIntExtra(Constant.POSITION,0);
+        initToolbar();
+        initTablayout();
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
+    }
+
+    private void initTablayout() {
+
+
+        PagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager(),initFragments());
+        mViewpager.setOffscreenPageLimit(adapter.getCount());
+        mViewpager.setAdapter(adapter);
+
+
+        mTabs.setupWithViewPager(mViewpager);
+
+        mViewpager.setCurrentItem(position);
+        mTabs.getTabAt(position).select();
+
+
+    }
+
+
 
     private List<FragmentInfo> initFragments(){
 
